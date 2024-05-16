@@ -127,6 +127,8 @@ if (isset($_GET['contenedor']) && !empty($_GET['contenedor']) || isset($_GET['re
 
     <body>
         <?php include('../plantilla/menu.php'); ?>
+        <?php include('../plantilla/modales.php'); ?>
+
         <div class="container mt-3" style="max-width: 99%;">
             <div class="row ">
                 <div class="row my-1 contenedor-registro-operaciones">
@@ -475,7 +477,7 @@ if (isset($_GET['contenedor']) && !empty($_GET['contenedor']) || isset($_GET['re
                                     <div class="row my-1">
                                         <div class="col-3">
                                             <div class="boton-modal text-center">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalVerFacturas" onclick="modalVerFacturas()">
+                                                <button type="button" class="btn btn-primary" onclick="modalVerFacturas()">
                                                     <label for="btn-modal">Ver facturas
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
                                                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -1768,28 +1770,6 @@ if (isset($_GET['contenedor']) && !empty($_GET['contenedor']) || isset($_GET['re
 
             <!-- FIN EJEMPLO MODAL DOBLE -->
 
-<!--MODAL VER FACTURAS Y DETALLE FACTURAS (MODAL DOBLE)-->
-<!--MODAL VER FACTURAS Y DETALLE FACTURAS (MODAL DOBLE)-->
-<div class="container mt-3 text-center" style="max-width: 98%;">
-    <div class="row">
-        <div class="modal fade" id="modalVerFacturas" tabindex="-1" aria-labelledby="modalVerFacturasLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header nft">
-                        <h5 class="modal-title" id="modalVerFacturasLabel">Ver Facturas</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body table-responsive" style="max-height: 80vh; ">
-                        <!-- Aquí va el contenido de la tabla -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -2919,8 +2899,8 @@ if (isset($_GET['contenedor']) && !empty($_GET['contenedor']) || isset($_GET['re
 
         <script src="../utils/config.js"></script>
         <script src="../utils/functions.js"></script>
+        <script src="../resources/js/functions_facturas.js"></script>
         <script src="../resources/js/functions_detalle_pagos.js"></script>
-        <script type="module" src="../utils/functions_solicitud_pagos.js"></script>
         <script type="module" src="../utils/functions_solicitud_pagos.js"></script>
         <script src="../resources/js/functions_reporte_carpetas.js"></script>
         <script type="module" src="../utils/functions_checkSolicitudPago.js"></script>
