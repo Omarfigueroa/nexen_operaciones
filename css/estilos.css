@@ -1,0 +1,452 @@
+:root {
+	--colwh: white;
+	--colbl: rgb(0, 0, 0);
+	--bk: rgba(254, 254, 255, .65);
+	--mf: #f8f9fa;
+	/*Color para background titulos e inputs*/
+	--nf: #002b57;
+	/*Color para el hover en background de titulos e inputs*/
+	--nfh: #0053a7;
+	/*Color para background de edit*/
+	--ed: orange;
+	/*Color para el hover en background de edit*/
+	--edh: rgb(163, 106, 0);
+	/*Color para el hover en iconos*/
+	--coh: rgb(78, 78, 78);
+	/*Color para  lso card*/
+	--card: #fafafa;
+	/*Blanco rebajado*/
+	--blr: rgb(235, 235, 235);
+	/*Color scrool*/
+	--sc: #cccccc;
+	/*Color titulos de los madal*/
+	--tim: #006db6;
+	/*Color rojo botón*/
+	--rb: #ff4848;
+	--rbh: rgb(102, 0, 0);
+	/*Color bóton de hacer más grande*/
+	--aut: rgb(0, 169, 199);
+	/*Color para el hover en background de titulos e inputs*/
+	--auth: #008caf;
+	/* Botón cerrar */
+	--btclose:#8a2b2b; 
+	--btcloseh:rgb(94, 24, 24); 
+
+  --nfb:rgb(0, 150, 100);
+  --nfbh:rgb(0, 90, 41);
+  /*Botones colores*/
+  --file:#cfc63e;
+  --fileh:#837a00;
+  --wait: #ec8e00;
+  --bell:#ffb351;
+  --setting: #eeeeee;
+  --settingh: #ffffff;
+  --dowloand:#005bd3;
+  --dowloandh:#002f6d;
+  --info:#a70075;
+  --infoh:#000000;
+}
+
+h1 {
+    margin: 0;
+    padding: 20px 0;
+    color: #00539F;
+    text-align: center;
+
+  }
+  #modalCrear .headerRegister{
+    /* Estilos generales del modal */
+    background-color: #ffffff;
+    /* Otros estilos deseados */
+  }
+  
+  #modalCrear .modal-content {
+    /* Estilos del contenido del modal */
+    padding: 20px;
+  }
+  #modalCrear label{
+    font-size: 15px;
+    padding: 5px;
+    text-align: center;
+    color: #ffffff;
+  }
+  #modalCrear .close {
+    /* Estilos del botón de cierre del modal */
+    border-style: none;
+    float: right;
+    cursor: pointer;
+    background-color: rgb(255, 0, 0);
+    color: rgb(253, 253, 253);
+    /* Otros estilos deseados */
+  }
+  #modalCrear .col{
+    margin-block-end: auto;
+  }
+  .cajas-filtros{
+    width: 90px;
+  }
+
+.form-signin {
+    width: auto;
+    height: auto;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+   border-radius: 1px;
+  }
+
+  .form-table-consulta{
+    width: 80%;
+    height: auto;
+    padding: 15px;
+    margin: auto;
+   border-radius: 1px;
+  }
+
+  .section-table{
+    overflow:scroll;
+     /* height:200px; */
+     width:auto;
+  }
+
+
+.form-carga-factura{
+  width: 80%;
+  height: auto;
+  padding: 15px;
+  margin: auto;
+  border-radius: 1px;
+}
+
+.form-tabla-contenedor{
+  width: 50%;
+  height: auto;
+  padding: 15px;
+  margin: auto;
+  border-radius: 1px;
+}
+
+#documentModal .modal-lg{
+    max-width: 1250px!important;
+}
+
+
+
+
+.nft,
+.nfb {
+	background-color: var(--nf);
+	color: var(--colwh);
+	border-radius: 0;
+}
+.dowloandbtn, .custom-icon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dowloandbtn, .eyewait{
+  width: 35px;
+  height: 35px;
+  background-color: var(--nfb);
+  border-radius: 10px;
+
+}
+.dowloandbtn:hover{
+  background-color: var(--nfbh);
+
+}
+
+.custom-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  cursor:auto;
+}
+
+.bellnoti, .danger, .wait, .pay{
+  cursor: no-drop;
+}
+.danger{
+background-color: var(--rb);
+}
+.wait{
+  background-color: var(--wait);
+}
+.pay{
+  background-color: var(--dowloand);
+  color: var(--colwh);
+}
+
+.true{
+  background-color: var(--nfb);
+}
+
+.setting{
+  background-color: var(--setting);
+  color: black;
+}
+.setting:hover{
+  background-color: var(--settingh);
+}
+
+.dowloand{
+  background-color: var(--dowloand);
+  color: var(--colwh);
+}
+.dowloand:hover{
+  background-color: var(--dowloandh);
+  color: var(--colwh);
+}
+.arrowUp{
+  background-color: var(--nfb);
+  color: var(--colwh);
+}
+.arrowUp:hover{
+  background-color: var(--nfbh);
+  color: var(--colwh);
+}
+.file{
+  background-color: var(--file);
+  color: var(--colwh);
+}
+.file:hover{
+  background-color: var(--fileh);
+}
+
+.bellnoti{
+  background-color: var(--bell);
+  color: var(--infoh);
+}
+
+.info{
+  background-color: var(--info);
+  color: var(--colwh);
+}
+.info:hover{
+  background-color: var(--infoh);
+  color: var(--colwh);
+}
+
+
+.setting, .dowloand, .dowloandFac, .file, .info{
+
+  cursor:pointer;
+}
+
+.let{
+  border-radius: 50px;
+  padding: 2px 5px 2px 5px;
+}
+
+/* Estilos generales de la tabla */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el encabezado de la tabla */
+.table-custom th {
+  background-color: #f8f9fa;
+  color: #212529;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #dee2e6;
+  padding: 10px;
+}
+
+/* Estilos para las celdas de la tabla */
+.table-custom td {
+  color: #212529;
+  text-align: center;
+  border: 1px solid #dee2e6;
+  padding: 10px;
+}
+
+/* Estilos para filas alternas */
+.table-custom tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.table-custom tbody tr:nth-child(odd) {
+  background-color: #e9ecef;
+}
+
+/* Estilos al pasar el ratón sobre las filas */
+.table-custom tbody tr:hover {
+  background-color: #c8d6e5;
+}
+
+/* Estilos para el pie de página de la tabla */
+.table-custom tfoot td {
+  background-color: #f8f9fa;
+  color: #212529;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #dee2e6;
+  padding: 10px;
+  border-top: none;
+}
+
+/* Estilos para el encabezado del pie de página de la tabla */
+.table-custom tfoot th {
+  border-top: none;
+
+}
+
+
+.custom-icon {
+  position: relative;
+}
+
+.number-circle, .number-circle2 {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--btclose);
+  border-radius: 50%;
+  color: var(--colwh);
+  text-align: center;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+
+.divsub{
+ margin: 10px;
+ background-color: #0f3864;
+color: white;
+}
+.divsub th {
+  background-color: #000d1b;
+}
+.divsub table th{
+  font-weight: bold;
+}
+
+
+table tbody tr:hover {
+  background-color: #ececec; 
+}
+#tablaDetallePagos .subReferencias tbody tr:hover{
+  background-color: #0374a8; 
+  color: rgb(255, 255, 255);
+}
+
+
+::selection {
+  color: #fff;
+  background: #000;
+  text-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+}
+.eyewait {
+  background-color: var(--dowloandh);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.eyewait:hover{
+  background-color: var(--dowloand);
+}
+
+.editbtn{
+  background-color: var(--bell);
+  color: var(--infoh);
+}
+.editbtn:hover{
+  background-color: var(--wait);
+  color: var(--infoh);
+}
+/*Barra de navegación*/
+
+::-webkit-scrollbar {
+	background-color: var(--setting);
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--sc);
+	border-radius: 10px;
+	/* box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.281); */
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: var(--nfh);
+}
+
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
+  z-index: 9999; /* asegura que esté encima de todo */
+  display: none; /* lo ocultamos inicialmente */
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 10px solid #b3b3b3; /* ancho y color del borde */
+  border-top: 10px solid #005085; /* color del borde y parte superior */
+  border-radius: 50%;
+  width: 80px; /* tamaño total del círculo */
+  height: 80px; /* tamaño total del círculo */
+  animation: spin 1s linear infinite; /* animación de rotación */
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.selectprueba{
+  outline: none;
+  padding: 3px 2px 2px 2px;
+  background-color: rgb(201, 201, 201) !important;
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.082);
+  border-radius: 5px;
+}
+
+.nftit{
+  border-radius: 0px !important;
+  padding: 10px !important;
+  font-weight: lighter !important;
+}
+
+.cardgrey{
+  border-radius: 0 !important;
+  background-color: #f3f3f3 !important;
+  padding: 10px;
+  margin: 10px 10px 10px  10px;
+}
+.colortrue{
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: var(--nfbh) !important;
+}
+.colortrue:hover{
+  background-color: var(--nfb) !important;
+}
+
+.spangru{
+  font-weight: bolder;
+}
+.spangru, .spandel{
+  font-size: 18px;
+  color: rgb(236, 142, 0);
+}
