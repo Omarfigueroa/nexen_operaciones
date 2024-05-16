@@ -30,7 +30,7 @@ function truncateFloat($number, $digitos)
         table th{
         border:2px solid #69899F;
         padding:5px;
-        }
+        } 
     </style>
 
 </head>
