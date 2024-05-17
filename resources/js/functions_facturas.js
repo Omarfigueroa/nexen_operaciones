@@ -157,6 +157,9 @@ selectElement.addEventListener('change', function() {
 });
 
 
+/**
+ * Carga la información de la factura en un modal.
+ */
 function modalCargarFactura() {
     var nombreOperador = $('#nombre_operador_o').val();
 
@@ -170,17 +173,11 @@ function modalCargarFactura() {
             data: { opcion: 'leerEmpresas', nombreOperador: nombreOperador },
             dataType: 'json',
             success: function (response) {
-                // Procesar la respuesta del servidor y mostrarla en el modal
-
-                // Ejemplo: Recorrer los datos y mostrarlos en la consola
-                for (var i = 0; i < response.length; i++) {
+              for (var i = 0; i < response.length; i++) {
                     var empresa = response[i];
-
                     $('#modal_nombre_operador').val(empresa.Razon_Social);
                     $('#modal_rfc_operador').val(empresa.RFC);
                     $('#modal_domicilio_operador').val(empresa.DOMICILIO_FISCAL);
-
-                    // console.log(empresa.ID_EMPRESA, empresa.Razon_Social, empresa.RFC, empresa.DOMICILIO_FISCAL, empresa.REPRESENTANTE_LEGAL, empresa.ESTATUS);
                 }
             },
             error: function () {
