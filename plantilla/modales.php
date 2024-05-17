@@ -181,6 +181,7 @@
                                             <div class="col-sm-2">
                                                 <h6 class="text-center">Incoterms</h6>
                                                 <select class="align-text-bottom form-control selectpicker validSelect" id="incoterms" name="incoterms" data-live-search="true">
+                                                    <option value="" selected disabled>Selecciona una opción</option>
                                                 </select>
                                             </div>
 
@@ -222,18 +223,20 @@
                                                 <div class="col-sm-2 validando">
                                                     <h6 class="text-center">Medida</h6>
                                                     <select class="align-text-bottom form-control selectpicker validSelect" id="medida" name="medida" data-live-search="true">
+                                                        <option value="" selected disabled>Selecciona una opción</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-3 ">
                                                     <h6 class="text-center">Precio Unitario</h6>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control validNumber" id="precio_unitario" name="precio_unitario" placeholder="Introduce el Precio Unitario 00.00" disabled hidden>
+                                                        <input type="text" class="form-control validNumber" id="precio_unitario" name="precio_unitario" placeholder="Introduce el Precio Unitario 00.00" hidden>
                                                         <input type="text" class="form-control validNumber" id="precio_fishing" name="precio_fishing" placeholder="Introduce el Precio Unitario 00.00" disabled>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2 validando">
                                                     <h6 class="text-center">Moneda</h6>
                                                     <select class="align-text-bottom form-control selectpicker validSelect" id="modal_moneda" name="modal_moneda" data-live-search="true">
+                                                        <option value="" selected disabled>Selecciona una opción</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-2 validando">
