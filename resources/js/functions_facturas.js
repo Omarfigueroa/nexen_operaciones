@@ -75,7 +75,7 @@ function setSelects(){
  * @param {string} action La acción que se enviará al servidor para obtener los datos.
  */
 
-function generalOptionsSelector(dataIdField, dataDescriptionField, selectId, action, id = null) {
+function generalOptionsSelector(dataIdField, dataDescriptionField, selectId, action) {
     var selectElement = document.getElementById(selectId);
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '../include/Facturas/GetSelectsInvoice.php?action=' + action, true);
@@ -98,7 +98,34 @@ function generalOptionsSelector(dataIdField, dataDescriptionField, selectId, act
     xhr.send();
 }
 
+/**
+ * Realiza una llamada AJAX para obtener información del proveedor por su nombre.
+ *
+ * @param {string} action - La acción para la solicitud.
+ * @param {string} id - El nombre del proveedo.
+ * @param {function} callback - La función de retorno.
+ */
+function getProviderByName(action, id, callback) {
+    $.ajax({
+        url: '../include/Facturas/GetSelectsInvoice.php',
+        type: 'GET',
+        data: { 
+            action: action,
+            id: id 
+        },
+        success: function(response) {
+            callback(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error: ' + error);
+        }
+    });
+}
 
+
+/**
+ * Calcula el precio unitario y lo muestra en los campos de precio unitario y precio "fishing(dato que se muestra al usuario)".
+ */
 function calcularPrecioTotal() {
     var cantidad = parseFloat($('#modal_cantidad').val());
     var precioTotal = parseFloat($('#precio_total').val());
@@ -111,7 +138,23 @@ function calcularPrecioTotal() {
     }
 }
 
-
+/**
+ * Realiza una llamada AJAX para obtener información del proveedor según el ID seleccionado.
+ */
+var selectElement = document.getElementById('proveedor_fact');
+selectElement.addEventListener('change', function() {
+    var action = 'selectInfo';
+    var idText = selectElement.value;
+    getProviderByName(action, idText, function(response) {
+        try {
+            var data = typeof response === 'string' ? JSON.parse(response) : response;
+            $('#tax_id').val(data[0].codigo);
+            $('#modal_domicilio_proveedor').val(data[0].domicilio);
+        } catch (e) {
+            console.error('Error parsing JSON response: ' + e);
+        }
+    });
+});
 
 
 function modalCargarFactura() {

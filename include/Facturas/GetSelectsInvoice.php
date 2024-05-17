@@ -69,11 +69,29 @@ class GetSelectsData {
             return [];
         }
     }
+
+    /**
+     * Obtains data from the Provider table based on the provider's name.
+     *
+     * @param string $textProvider The name of the provider to search for.
+     * @return array Data from the Provider table.
+     */
+    public function getProviderByName($textProvider) {
+        try {
+            $stmt = $this->conn_bd->prepare("SELECT proveedor, codigo, domicilio FROM [provedores] WHERE Proveedor = ? ORDER BY proveedor ASC");
+            $stmt->execute([$textProvider]);
+            $provider = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $provider;
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
 }
 
 require '../../conexion/bd.php';
 
-$action = $_GET['action']; // Assuming action parameter is sent via GET
+$action = $_GET['action'];
 
 $getSelectsData = new GetSelectsData($conn_bd);
 
@@ -90,10 +108,15 @@ switch ($action) {
     case 'provider':
         $data = $getSelectsData->getProvider();
         break;
+    case 'selectInfo':
+        $textProvider = $_GET['id'];
+        $data = $getSelectsData->getProviderByName($textProvider);
+        break;
     default:
         $data = [];
         break;
 }
+
 
 header('Content-Type: application/json');
 echo json_encode($data);
