@@ -1,9 +1,8 @@
-﻿
-var commonOptions = {
+﻿var commonOptions = {
     aProcessing: true,
     aServerSide: true,
     language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json",
+        url: '//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json',
     },
     responsive: true,
     bDestroy: true,
@@ -11,9 +10,8 @@ var commonOptions = {
     searching: true,
     scrollY: true,
     scrollX: true,
-  };
+};
 $(document).ready(function () {
-   
     actualizarNumerosFactura();
 
     $('.selectpicker').selectpicker();
@@ -209,74 +207,71 @@ $(document).ready(function () {
         /**
          * Validar el proveedor
          */
-        const proveedorSelect = $('#proveedor_fact')
-        const inputPaisOrigen = $('#modal_pais_origen')
-        const inputNumFactura = $('#modal_num_factura')
-        const inputFechaFactura = $('#modal_fecha_factura')
-        const arrayValidator = [proveedorSelect, inputPaisOrigen, inputNumFactura, inputFechaFactura]
-
-        
+        const proveedorSelect = $('#proveedor_fact');
+        const inputPaisOrigen = $('#modal_pais_origen');
+        const inputNumFactura = $('#modal_num_factura');
+        const inputFechaFactura = $('#modal_fecha_factura');
+        const arrayValidator = [proveedorSelect, inputPaisOrigen, inputNumFactura, inputFechaFactura];
 
         var isValid = true;
 
-        arrayValidator.forEach(element => {
-            if(element.val() === null || element.val() === '') {
+        arrayValidator.forEach((element) => {
+            if (element.val() === null || element.val() === '') {
                 $('#proveedor_fact').selectpicker('destroy');
-              
-                if(element == proveedorSelect) {
+
+                if (element == proveedorSelect) {
                     $('#proveedor_fact').addClass('is-invalid');
                     $('#proveedor_fact').selectpicker('render');
                 }
-                element.addClass('is-invalid')
-                isValid = false
+                element.addClass('is-invalid');
+                isValid = false;
             } else {
-                element.removeClass('is-invalid')
+                element.removeClass('is-invalid');
             }
-        })
+        });
 
+        // Crear un array de objetos con dos campos cada uno
+        var mensajeserrores = [
+            { idcampo: '#proveedor_fact', mensaje: 'Proveedor' },
+            { idcampo: '#modal_pais_origen', mensaje: 'País' },
+            { idcampo: '#modal_num_factura', mensaje: 'Número de Factura' },
+            { idcampo: '#modal_fecha_factura', mensaje: 'Fecha' },
+            { idcampo: '#desc_factura', mensaje: 'Descripción en Español' },
+            { idcampo: '#desc_factura_i', mensaje: 'Descripción en Inglés' },
+            { idcampo: '#modal_cantidad', mensaje: 'Cantidad' },
+            { idcampo: '#modal_mark', mensaje: 'Marcador' },
+            { idcampo: '#modal_peso_bruto', mensaje: 'Peso Bruto' },
+            { idcampo: '#modal_peso_neto', mensaje: 'Peso Neto' },
+        ];
 
-// Crear un array de objetos con dos campos cada uno
-var mensajeserrores = [
-    { idcampo: '#proveedor_fact', mensaje: 'Proveedor' },
-    { idcampo: '#modal_pais_origen', mensaje: 'País' },
-    { idcampo: '#modal_num_factura', mensaje: 'Número de Factura' },
-    { idcampo: '#modal_fecha_factura', mensaje: 'Fecha' },
-    { idcampo: '#desc_factura', mensaje: 'Descripción en Español' },
-    { idcampo: '#desc_factura_i', mensaje: 'Descripción en Inglés' },
-    { idcampo: '#modal_cantidad', mensaje: 'Cantidad' },
-    { idcampo: '#modal_mark', mensaje: 'Marcador' },
-    { idcampo: '#modal_peso_bruto', mensaje: 'Peso Bruto' },
-    { idcampo: '#modal_peso_neto', mensaje: 'Peso Neto' }
-];
+        // Variable para almacenar los mensajes de error
+        var mensajesErroresHTML = '';
 
-// Variable para almacenar los mensajes de error
-var mensajesErroresHTML = '';
+        // Variable para indicar si hay errores
+        var isValid = true;
+        $('#modalCargarFacturas .is-invalid, .partidas .validando .form-control').each(function () {
+            var valor = $(this).val();
+            var idCampo = $(this).attr('id');
+            var mensajeError = mensajeserrores.find(function (item) {
+                return item.idcampo === '#' + idCampo;
+            });
 
-// Variable para indicar si hay errores
-var isValid = true;
-$('#modalCargarFacturas .is-invalid, .partidas .validando .form-control').each(function() {
-    var valor = $(this).val();
-    var idCampo = $(this).attr('id');
-    var mensajeError = mensajeserrores.find(function(item) {
-        return item.idcampo === '#' + idCampo;
-    });
+            if (valor === '' || valor === null) {
+                $(this).addClass('is-invalid');
+                isValid = false;
 
-    if (valor === '' || valor === null ) {
-        $(this).addClass('is-invalid');
-        isValid = false;
+                if (mensajeError) {
+                    mensajesErroresHTML += `${mensajeError.mensaje}, `;
+                }
+            }
+        });
 
-        if (mensajeError) {
-            mensajesErroresHTML += `${mensajeError.mensaje}, `;
+        // Mostrar SweetAlert con los mensajes de error
+        if (!isValid) {
+            const mensaje = mensajesErroresHTML;
+            SweetView(mensaje);
+            return;
         }
-    }
-});
-
-// Mostrar SweetAlert con los mensajes de error
-if (!isValid) {
-    const mensaje= mensajesErroresHTML;
-    SweetView(mensaje);
-    return;
-}
 
         //Termina comprobacion de campos partidas
 
@@ -293,7 +288,7 @@ if (!isValid) {
         var mark = $('#modal_mark').val();
 
         if (isNaN(cantidad) || isNaN(precioUnitario)) {
-            const mensaje='Ingrese un valor numérico válido para cantidad y precio unitario.';
+            const mensaje = 'Ingrese un valor numérico válido para cantidad y precio unitario.';
             SweetView(mensaje);
             return;
         }
@@ -368,13 +363,233 @@ if (!isValid) {
         }
     });
 });
+//modal para ver facturas
+function modalVerFacturas() {
+    console.log("hola");
+    $('#modalVerFacturas').modal('show');
+    // //Variables
+    // var referencia_nexen = $('#referencia_nexen').val();
+    // var nombreOperador = $('#nombre_operador_o').val();
 
+    // $.ajax({
+    //     url: '../include/cargarFacturas.php',
+    //     method: 'POST',
+    //     data: {
+    //         opcion: 'obtenerFacturas',
+    //         referencia_nexen: referencia_nexen,
+    //         nombreOperador: nombreOperador,
+    //     },
+    //     dataType: 'json',
+    //     success: function (response) {
+    //         if (response.success) {
+    //             var facturas = response.data;
+    //             // console.log(facturas);
+    //             // Construir la tabla de facturas
+    //             var table = '<table>';
+    //             table += '<thead><tr>';
+    //             table += '<th>ID Factura</th>';
+    //             table += '<th>Referencia Nexen</th>';
+    //             table += '<th>Proveedor</th>';
+    //             table += '<th>Tax ID</th>';
+    //             table += '<th>Número Factura</th>';
+    //             table += '<th>Fecha Factura</th>';
+    //             table += '<th>Importador/Exportador</th>';
+    //             table += '<th>Total General</th>';
+    //             table += '<th>Fech. Operación</th>';
+    //             table += '<th>Hora Operación</th>';
+    //             table += '<th>Usuario</th>';
+    //             table += '<th>Estatus</th>';
+    //             table += '<th>Detalles</th>'; // Agregar columna para el botón "Detalles"
+    //             table += '<th>Invoice</th>'; // Agregar columna para el botón "Detalles"
+    //             table += '<th>Packing List</th>'; // Agregar columna para el botón "Detalles"
+    //             table += '<th>Editar</th>'; // Agregar columna para el botón "Editar factura"
+    //             table += '<th>Borrar</th>'; // Agregar columna para el botón "Editar factura"
+    //             table += '</tr></thead>';
+    //             table += '<tbody>';
+
+    //             for (var i = 0; i < facturas.length; i++) {
+    //                 var factura = facturas[i];
+
+    //                 table += '<tr>';
+    //                 table += '<td>' + factura.Id_Factura + '</td>';
+    //                 table += '<td>' + factura.Referencia_Nexen + '</td>';
+    //                 table += '<td>' + factura.Proveedor + '</td>';
+    //                 table += '<td>' + factura.Tax_Id + '</td>';
+    //                 table += '<td>' + factura.Numero_Factura + '</td>';
+    //                 table += '<td>' + factura.Fecha_Factura + '</td>';
+    //                 table += '<td>' + factura.Importador_Exportador + '</td>';
+    //                 var totalFormateado = '$' + factura.Total_General;
+    //                 table += '<td>' + totalFormateado + '</td>';
+    //                 table += '<td>' + factura.Fechope + '</td>';
+    //                 var horaLegible = new Date('2000-01-01T' + factura.HoraoPe).toLocaleTimeString([], {
+    //                     hour: '2-digit',
+    //                     minute: '2-digit',
+    //                 });
+    //                 table += '<td>' + horaLegible + '</td>';
+    //                 table += '<td>' + factura.Usuario + '</td>';
+    //                 table += '<td>' + factura.Estatus + '</td>';
+    //                 table +=
+    //                     '<td><button type="button" class="btn btn-primary btn-detalles" data-bs-toggle="modal" data-bs-target="#modalVerDetalleFacturas" data-id="' +
+    //                     factura.Id_Factura +
+    //                     '">Detalles</button></td>'; // Agregar botón "Detalles"
+    //                 table +=
+    //                     '<td><a class="btn btn-primary btn-detalles" href="generarinvoice.php?id=' +
+    //                     factura.Id_Factura +
+    //                     '" target="_blank">&nbsp;&nbsp;<i class="bi bi-printer text-light"></i>&nbsp;&nbsp;</a></td>'; // Agregar botón "Impresion invoice"
+    //                 table +=
+    //                     '<td><a class="btn btn-primary btn-detalles" href="generarpacking.php?id=' +
+    //                     factura.Id_Factura +
+    //                     '" target="_blank">&nbsp;&nbsp;<i class="bi bi-printer text-light"></i>&nbsp;&nbsp;</a></td>'; // Agregar botón "Impresion packing list"
+    //                     table +=
+    //                     '<td><a class="btn btn-warning btn-editarFactura"' +
+    //                     factura.Id_Factura +
+    //                     '" numero_factura="' +
+    //                     factura.Numero_Factura +
+    //                     '" onclick="editarFacturas(this)">&nbsp;&nbsp;<i class="bi bi-pencil-square text-primary"></i>&nbsp;&nbsp;</a></td>'; // Agregar botón "editar factura"
+    //                 table +=
+    //                     '<td><a class="btn btn-danger btn-borrarFactura"  id_factura="' +
+    //                     factura.Id_Factura +
+    //                     '" referencia_nexen="' +
+    //                     factura.Referencia_Nexen +
+    //                     '" numero_factura="' +
+    //                     factura.Numero_Factura +
+    //                     '" fecha_factura="' +
+    //                     factura.Fecha_Factura +
+    //                     '" tax_id="' +
+    //                     factura.Tax_Id +
+    //                     '" usuario="' +
+    //                     factura +
+    //                     '"  onclick="borrarFacturas(this)">&nbsp;&nbsp;<i class="bi bi-trash text-white"></i>&nbsp;&nbsp;</a></td>'; // Agregar botón "borrar factura y sus partidas"
+    //                 table += '</tr>';
+    //             }
+
+    //             table += '</tbody>';
+    //             table += '</table>';
+
+    //             // Agregar la tabla al contenido del modal
+    //             $('#modalVerFacturas .modal-body').html(table);
+
+    //             // Inicializar DataTables en la tabla
+    //             $('#modalVerFacturas table').DataTable();
+
+    //             // Al hacer clic en el botón "Detalles"
+    //             $('#modalVerFacturas').on('click', '.btn-detalles', function () {
+    //                 var idFactura = $(this).data('id');
+
+    //                 // Aquí puedes realizar la lógica para mostrar los detalles de la factura en otro modal o realizar cualquier otra acción
+    //                 console.log('Mostrar detalles de la factura con ID: ' + idFactura);
+    //                 //SEgUNDO NIVEL DE AJAX PARA DETALLES***********************************/
+    //                 $.ajax({
+    //                     url: '../include/cargarFacturas.php',
+    //                     method: 'POST',
+    //                     data: {
+    //                         opcion: 'obtenerDetalleFacturas',
+    //                         idFactura: idFactura,
+    //                     },
+    //                     dataType: 'json',
+    //                     success: function (response) {
+    //                         if (response.success) {
+    //                             var facturas = response.data;
+
+    //                             // Construir la tabla de facturas
+    //                             var table = '<table id="tablaDetalles">';
+    //                             table += '<thead><tr>';
+    //                             table += '<th>ID Factura</th>';
+    //                             table += '<th>Referencia Nexen</th>';
+    //                             table += '<th>Número Factura</th>';
+    //                             table += '<th>Número Partida</th>';
+    //                             table += '<th>Descripción Cove</th>';
+    //                             table += '<th>Cantidad</th>';
+    //                             table += '<th>Unidad Medida</th>';
+    //                             table += '<th>Moneda</th>';
+    //                             table += '<th>Precio Unitario</th>';
+    //                             table += '<th>Total</th>';
+    //                             table += '<th>Peso Bruto</th>';
+    //                             table += '<th>Peso Neto</th>';
+    //                             table += '<th>Estatus</th>';
+    //                             table += '<th>Fecha Operación</th>';
+    //                             table += '<th>Hora Operación</th>';
+    //                             table += '<th>Usuario</th>';
+    //                             table += '<th>Borrar partida</th>';
+    //                             table += '</tr></thead>';
+    //                             table += '<tbody>';
+
+    //                             for (var i = 0; i < facturas.length; i++) {
+    //                                 var factura = facturas[i];
+
+    //                                 table += '<tr>';
+    //                                 table += '<td>' + factura.Id_Factura + '</td>';
+    //                                 table += '<td>' + factura.Referencia_Nexen + '</td>';
+    //                                 table += '<td>' + factura.Numero_Factura + '</td>';
+    //                                 table += '<td>' + factura.Numero_Partida + '</td>';
+    //                                 table += '<td>' + factura.Descripcion_Cove + '</td>';
+    //                                 table += '<td>' + factura.Cantidad + '</td>';
+    //                                 table += '<td>' + factura.Unidad_Medida + '</td>';
+    //                                 table += '<td>' + factura.Moneda + '</td>';
+    //                                 table += '<td>' + factura.Precio_Unitario + '</td>';
+    //                                 table += '<td>' + factura.Total + '</td>';
+    //                                 table += '<td>' + factura.Peso_Bruto + '</td>';
+    //                                 table += '<td>' + factura.Peso_Neto + '</td>';
+    //                                 table += '<td>' + factura.Estatus + '</td>';
+    //                                 table += '<td>' + factura.Fechope + '</td>';
+    //                                 table += '<td>' + factura.Horaope + '</td>';
+    //                                 table += '<td>' + factura.Usuario + '</td>';
+    //                                 table +=
+    //                                     '<td><button type="button" class="btn btn-danger btn-borrarPartida" partida="' +
+    //                                     factura.Numero_Partida +
+    //                                     '" factura="' +
+    //                                     factura.Numero_Factura +
+    //                                     '" onclick="borrarPartidas(this)">Borrar</button></td>'; // Agregar botón "Detalles"
+    //                                 table += '</tr>';
+    //                             }
+
+    //                             table += '</tbody>';
+    //                             table += '</table>';
+
+    //                             // Agregar la tabla al contenido del modal
+    //                             $('#modalVerDetalleFacturas .modal-body').html(table);
+
+    //                             // Inicializar DataTables en la tabla
+    //                             $('#modalVerDetalleFacturas table').DataTable();
+
+    //                             // Al hacer clic en el botón "Detalles"
+    //                             /*
+    //                       $('#modalVerFacturas').on('click', '.btn-detalles', function() {
+    //                           var idFactura = $(this).data('id');
+    //                           // Aquí puedes realizar la lógica para mostrar los detalles de la factura en otro modal o realizar cualquier otra acción
+    //                           console.log('Mostrar detalles de la factura con ID: ' + idFactura);
+    //                       });
+    //                       */
+    //                         } else {
+    //                             console.log('Error al obtener las facturas');
+    //                             console.log(response.message);
+    //                         }
+    //                     },
+    //                     error: function (xhr, status, error) {
+    //                         console.log('Error en la solicitud AJAX');
+    //                         console.log(error);
+    //                         console.log(xhr.responseText);
+    //                     },
+    //                 });
+    //             });
+    //         } else {
+    //             console.log('Error al obtener las facturas');
+    //             console.log(response.message);
+    //         }
+    //     },
+    //     error: function (xhr, status, error) {
+    //         console.log('Error en la solicitud AJAX');
+    //         console.log(error);
+    //         console.log(xhr.responseText);
+    //     },
+    // });
+}
 //Function para cargar datos en modal Cargar factura
 function modalCargarFactura() {
     var nombreOperador = $('#nombre_operador_o').val();
 
     if (nombreOperador === '') {
-        const mensaje='Falta seleccionar el campo de nombre del operador';
+        const mensaje = 'Falta seleccionar el campo de nombre del operador';
         SweetView(mensaje);
         // return;
     } else {
@@ -400,7 +615,7 @@ function modalCargarFactura() {
                 }
             },
             error: function () {
-                const mensaje='Error al obtener los datos del servidor';
+                const mensaje = 'Error al obtener los datos del servidor';
                 SweetView(mensaje);
             },
         });
@@ -411,7 +626,7 @@ function enviarSolicitudAjax() {
     // Comprobar si la tabla tiene registros
     var rowCount = $('#tablaFacturas tbody tr').length;
     if (rowCount === 0) {
-        const mensaje='No hay partidas en la tabla. No se puede guardar';
+        const mensaje = 'No hay partidas en la tabla. No se puede guardar';
         SweetView(mensaje);
         return;
     }
@@ -520,11 +735,10 @@ function enviarSolicitudAjax() {
                         success: function (response) {
                             if (!successShown) {
                                 const mensaje = response.message;
-                                    SweetViewTrue(mensaje, () => {
-                                        location.reload();
-                                    });
+                                SweetViewTrue(mensaje, () => {
+                                    location.reload();
+                                });
                                 successShown = true; // Establecer la variable de control en true para evitar mostrar el mensaje nuevamente
-                          
                             }
                         },
                         error: function (xhr, status, error) {
@@ -552,25 +766,23 @@ function enviarSolicitudAjax() {
     });
 }
 
-function selectMoneda(moneda){
+function selectMoneda(moneda) {
     if (document.querySelector('#modal_moneda_edit')) {
         let ajaxUrl = '../include/moneda.php';
         let request = new XMLHttpRequest();
-        request.open("GET", ajaxUrl, true);
+        request.open('GET', ajaxUrl, true);
         request.send();
-        request.onreadystatechange = function() {
+        request.onreadystatechange = function () {
             if (request.readyState == 4 && request.status == 200) {
                 // $('#Mensajeria').selectpicker('destroy');
                 document.querySelector('#modal_moneda_edit').innerHTML = request.responseText;
-                
-                document.querySelector('#modal_moneda_edit').value =moneda;
-                // $('#EditProveedor').selectpicker('render');
 
+                document.querySelector('#modal_moneda_edit').value = moneda;
+                // $('#EditProveedor').selectpicker('render');
             }
-        }
+        };
     }
 }
-
 
 function fntUpdate(id_catalogo, referencia, tipo_trafico) {
     let request = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
@@ -646,11 +858,9 @@ function mostrar_codigo_aduana(valor) {
     };
 }
 
-
 //function para hacer los insert de la factura y detalles factura
 // Función para enviar la solicitud AJAX
 function updateFacturasEdit() {
-
     //Editar facturaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     //Comprobar todos los campos llenos del formulario para darle update
     $('#modalEditarFacturas .form_facturas_edit .form-control').removeClass('is-invalid');
@@ -667,14 +877,14 @@ function updateFacturasEdit() {
     });
 
     if (!isValid) {
-        const mensaje='Por favor, complete todos los campos';
+        const mensaje = 'Por favor, complete todos los campos';
         SweetView(mensaje);
         return;
     }
     // Comprobar si la tabla tiene registros de partidas
     var rowCount = $('#tablaPartidasEditar tbody tr').length;
     if (rowCount === 0) {
-        const mensaje='No hay partidas en la tabla. No se puede guardar';
+        const mensaje = 'No hay partidas en la tabla. No se puede guardar';
         SweetView(mensaje);
         return;
     }
@@ -704,8 +914,6 @@ function updateFacturasEdit() {
     //bloquear con un disabled el boton de editar para que no lo aprenten
     $('#btnEditarFacturas').prop('disabled', true);
 
-   
-
     // Enviar la solicitud AJAX
     $.ajax({
         url: '../include/cargarFacturas.php',
@@ -729,8 +937,6 @@ function updateFacturasEdit() {
         success: function (response) {
             // Manejar la respuesta del servidor
             if (response.success) {
-             
-
                 var referencia_nexen = response.Referencia_Nexen;
                 // Realizar el insert por cada registro en la tabla
                 var registros_edit = $('#tablaPartidasEditar tbody tr');
@@ -744,15 +950,12 @@ function updateFacturasEdit() {
                     var partida = (index + 1).toString(); // El número de partida es el índi
                     var descripcion = $(element).find('td:nth-child(2)').text();
                     var descripcion_i = $(element).find('td:nth-child(3)').text();
-                   
+
                     var medida = $(element).find('td:nth-child(5)').text();
 
-                   
                     var peso_bruto = $(element).find('td:nth-child(9)').text();
                     var peso_neto = $(element).find('td:nth-child(10)').text();
                     var mark = $(element).find('td:nth-child(11)').text();
-
-     
 
                     $.ajax({
                         url: '../include/cargarFacturas.php',
@@ -772,13 +975,12 @@ function updateFacturasEdit() {
                             peso_bruto: peso_bruto,
                             peso_neto: peso_neto,
                             mark: mark,
-                            precioUnitario:precioUnitario,
-                            cantidad:cantidad
+                            precioUnitario: precioUnitario,
+                            cantidad: cantidad,
                         },
                         dataType: 'json',
                         success: function (response) {
                             if (!successShown) {
-                                
                                 alert(response.message);
                                 successShown = true; // Establecer la variable de control en true para evitar mostrar el mensaje nuevamente
                                 $('#spinner_edit').addClass('d-none');
@@ -807,7 +1009,6 @@ function updateFacturasEdit() {
 //function para UPDATE DE FACTURAS Y DETALLES
 //function para hacer los insert de la factura y detalles factura
 
-
 //functiones para editar facturas
 //functiones para editar facturas
 function editarFacturas(btnEditarFacturas) {
@@ -824,7 +1025,7 @@ function editarFacturas(btnEditarFacturas) {
         success: function (response) {
             if (response.success) {
                 var facturas = response.data;
-            
+
                 if (facturas.length > 0) {
                     var factura = facturas[0];
 
@@ -844,44 +1045,46 @@ function editarFacturas(btnEditarFacturas) {
                     selectMoneda(factura.Moneda);
                     $('#precio_unitario_edit').val(factura.Precio_Unitario);
 
-
-
-
-
                     // Logica para llenar la tabla de partidas
                     var partidas = response.partidas;
 
-    
-                // Inicializar DataTable para la tabla de partidas a editar
-            var tablaPartidasEditar = $('#tablaPartidasEditar').DataTable(Object.assign({}, commonOptions, {
-                data: partidas,
-                columns: [
-                    { data: 'Numero_Partida' },
-                    { data: 'Descripcion_Cove' },
-                    { data: 'Descripcion_cove_I' },
-                    { data: 'Cantidad' },
-                    { data: 'Unidad_Medida' },
-                    { data: 'Precio_Unitario' },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            var subtotal = parseFloat(data.Cantidad) * parseFloat(data.Precio_Unitario);
-                            return subtotal.toFixed(7); // Mostrar el subtotal
-                        }
-                    },
-                    { data: 'Moneda' },
-                    { data: 'Peso_Bruto' },
-                    { data: 'Peso_Neto' },
-                    { data: 'Mark' },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return '<button type="button" class="btn btn-danger btn-borrarPartidaEdit" partida="' + data.Numero_Partida + '" factura="' + data.Numero_Factura + '" onclick="borrarPartidasEdit(this)">Borrar</button>';
-                        }
-                    }
-                ]
-            }));
-
+                    // Inicializar DataTable para la tabla de partidas a editar
+                    var tablaPartidasEditar = $('#tablaPartidasEditar').DataTable(
+                        Object.assign({}, commonOptions, {
+                            data: partidas,
+                            columns: [
+                                { data: 'Numero_Partida' },
+                                { data: 'Descripcion_Cove' },
+                                { data: 'Descripcion_cove_I' },
+                                { data: 'Cantidad' },
+                                { data: 'Unidad_Medida' },
+                                { data: 'Precio_Unitario' },
+                                {
+                                    data: null,
+                                    render: function (data, type, row) {
+                                        var subtotal = parseFloat(data.Cantidad) * parseFloat(data.Precio_Unitario);
+                                        return subtotal.toFixed(7); // Mostrar el subtotal
+                                    },
+                                },
+                                { data: 'Moneda' },
+                                { data: 'Peso_Bruto' },
+                                { data: 'Peso_Neto' },
+                                { data: 'Mark' },
+                                {
+                                    data: null,
+                                    render: function (data, type, row) {
+                                        return (
+                                            '<button type="button" class="btn btn-danger btn-borrarPartidaEdit" partida="' +
+                                            data.Numero_Partida +
+                                            '" factura="' +
+                                            data.Numero_Factura +
+                                            '" onclick="borrarPartidasEdit(this)">Borrar</button>'
+                                        );
+                                    },
+                                },
+                            ],
+                        })
+                    );
 
                     // Mostrar el modal aquí después de que se ha construido la tabla
                     $('#modalEditarFacturas').modal('show');
@@ -901,42 +1104,37 @@ function editarFacturas(btnEditarFacturas) {
     });
 }
 
-
 // Evento click del botón "Agregar"
 $('#btnAgregar_edit').click(function () {
-   
     $('.form-control').removeClass('is-invalid');
 
     /**
      * Validar el proveedor
      */
-    const proveedorSelect = $('#proveedor_fact_edit')
-    const inputPaisOrigen = $('#modal_pais_origen_edit')
-    const inputNumFactura = $('#modal_num_factura_edit')
-    const inputFechaFactura = $('#modal_fecha_factura_edit')
-    const arrayValidator = [proveedorSelect, inputPaisOrigen, inputNumFactura, inputFechaFactura]
-
-    
+    const proveedorSelect = $('#proveedor_fact_edit');
+    const inputPaisOrigen = $('#modal_pais_origen_edit');
+    const inputNumFactura = $('#modal_num_factura_edit');
+    const inputFechaFactura = $('#modal_fecha_factura_edit');
+    const arrayValidator = [proveedorSelect, inputPaisOrigen, inputNumFactura, inputFechaFactura];
 
     var isValid = true;
 
-    arrayValidator.forEach(element => {
-        if(element.val() === null || element.val() === '') {
+    arrayValidator.forEach((element) => {
+        if (element.val() === null || element.val() === '') {
             $('#proveedor_fact_edit').selectpicker('destroy');
-          
-            if(element == proveedorSelect) {
+
+            if (element == proveedorSelect) {
                 $('#proveedor_fact_edit').addClass('is-invalid');
                 $('#proveedor_fact_edit').selectpicker('render');
             }
-            element.addClass('is-invalid')
-            element.removeClass('is-valid')
-            isValid = false
+            element.addClass('is-invalid');
+            element.removeClass('is-valid');
+            isValid = false;
         } else {
-            element.removeClass('is-invalid')
-            element.addClass('is-valid')
+            element.removeClass('is-invalid');
+            element.addClass('is-valid');
         }
-    })
-
+    });
 
     // Crear un array de objetos con los campos requeridos
     var mensajeserrores = [
@@ -949,36 +1147,36 @@ $('#btnAgregar_edit').click(function () {
         { idcampo: '#modal_cantidad_edit', mensaje: 'Cantidad' },
         { idcampo: '#modal_mark_edit', mensaje: 'Marcador' },
         { idcampo: '#modal_peso_bruto_edit', mensaje: 'Peso Bruto' },
-        { idcampo: '#modal_peso_neto_edit', mensaje: 'Peso Neto' }
+        { idcampo: '#modal_peso_neto_edit', mensaje: 'Peso Neto' },
     ];
-// Variable para almacenar los mensajes de error
-var mensajesErroresHTML = '';
+    // Variable para almacenar los mensajes de error
+    var mensajesErroresHTML = '';
 
-// Variable para indicar si hay errores
+    // Variable para indicar si hay errores
 
-$('#modalEditarFacturas .form-control').each(function() {
-    var valor = $(this).val();
-    var idCampo = $(this).attr('id');
-    var mensajeError = mensajeserrores.find(function(item) {
-        return item.idcampo === '#' + idCampo;
+    $('#modalEditarFacturas .form-control').each(function () {
+        var valor = $(this).val();
+        var idCampo = $(this).attr('id');
+        var mensajeError = mensajeserrores.find(function (item) {
+            return item.idcampo === '#' + idCampo;
+        });
+
+        if (valor === '' || valor === null) {
+            $(this).addClass('is-invalid');
+            isValid = false;
+
+            if (mensajeError) {
+                mensajesErroresHTML += `${mensajeError.mensaje}, `;
+            }
+        }
     });
 
-    if (valor === '' || valor === null ) {
-        $(this).addClass('is-invalid');
-        isValid = false;
-
-        if (mensajeError) {
-            mensajesErroresHTML += `${mensajeError.mensaje}, `;
-        }
+    // Mostrar SweetAlert con los mensajes de error
+    if (!isValid) {
+        const mensaje = mensajesErroresHTML;
+        SweetView(mensaje);
+        return;
     }
-});
-
-// Mostrar SweetAlert con los mensajes de error
-if (!isValid) {
-    const mensaje= mensajesErroresHTML;
-    SweetView(mensaje);
-    return;
-}
     // Obtener el número de partida
     var numeroPartida; // Declarar la variable sin asignar un valor
 
@@ -1204,12 +1402,12 @@ function borrarPartidas(button) {
         dataType: 'json',
         success: function (response) {
             if (response.success) {
-                const mensaje=response.message;
+                const mensaje = response.message;
                 SweetViewTrue(mensaje, () => {
                     location.reload();
                 });
             } else {
-                const mensaje=response.message;
+                const mensaje = response.message;
                 SweetView(mensaje, () => {
                     location.reload();
                 });
@@ -1542,7 +1740,6 @@ function deleteProveedor() {
         $('#editar_pass').addClass('is-invalid');
     }
 }
-
 
 function verificarContraseñaClientes() {
     var password = $('#pw_cliente_edit').val();
@@ -1960,20 +2157,24 @@ $('#nombre_operador').change(function () {
     });
 });
 
-window.addEventListener('load', function() {
-//Mandamos llamar funciones del archivo config.js
-    setupSelectValidation();
-    fntValidText();
-    fntValidNumber();
-    fntValidDescription();
-    fntValidMark();
-    fntValidFactura();
-    fntValidDate();
-}, false);
+window.addEventListener(
+    'load',
+    function () {
+        //Mandamos llamar funciones del archivo config.js
+        setupSelectValidation();
+        fntValidText();
+        fntValidNumber();
+        fntValidDescription();
+        fntValidMark();
+        fntValidFactura();
+        fntValidDate();
+    },
+    false
+);
 
 const closeButton = document.querySelector('.close');
 
 closeButton.addEventListener('click', () => {
-  // Perform any custom actions here, e.g., logging, confirmation messages, etc.
-  console.log('Modal closed!');
+    // Perform any custom actions here, e.g., logging, confirmation messages, etc.
+    console.log('Modal closed!');
 });

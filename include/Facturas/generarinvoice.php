@@ -1,6 +1,6 @@
 <?php
-include_once "../dompdf/autoload.inc.php";
-require '../conexion/bd.php';
+include_once "../../dompdf/autoload.inc.php";
+require '../../conexion/bd.php';
 
 use Dompdf\Dompdf;
 
