@@ -332,7 +332,15 @@ if (!isValid) {
     $('#precio_total').keyup(calcularPrecioTotal);
 
     // Función para calcular el precio total
- 
+    function calcularPrecioTotal() {
+        var cantidad = parseFloat($('#modal_cantidad').val());
+        var precioTotal = parseFloat($('#precio_total').val());
+
+        if (!isNaN(cantidad) && !isNaN(precioTotal)) {
+            var precioUnitario = precioTotal / cantidad;
+            $('#precio_unitario').val(precioUnitario.toFixed(7));
+        }
+    }
 
     //Seccion modal edit detalles
     // Evento keyup del campo de cantidad
@@ -360,9 +368,264 @@ if (!isValid) {
         }
     });
 });
+//modal para ver facturas
+function modalVerFacturas() {
+    //console.log("hola");
 
+    //Variables
+    var referencia_nexen = $('#referencia_nexen').val();
+    var nombreOperador = $('#nombre_operador_o').val();
 
+    $.ajax({
+        url: '../include/cargarFacturas.php',
+        method: 'POST',
+        data: {
+            opcion: 'obtenerFacturas',
+            referencia_nexen: referencia_nexen,
+            nombreOperador: nombreOperador,
+        },
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                var facturas = response.data;
+                // console.log(facturas);
+                // Construir la tabla de facturas
+                var table = '<table>';
+                table += '<thead><tr>';
+                table += '<th>ID Factura</th>';
+                table += '<th>Referencia Nexen</th>';
+                table += '<th>Proveedor</th>';
+                table += '<th>Tax ID</th>';
+                table += '<th>Número Factura</th>';
+                table += '<th>Fecha Factura</th>';
+                table += '<th>Importador/Exportador</th>';
+                table += '<th>Total General</th>';
+                table += '<th>Fech. Operación</th>';
+                table += '<th>Hora Operación</th>';
+                table += '<th>Usuario</th>';
+                table += '<th>Estatus</th>';
+                table += '<th>Detalles</th>'; // Agregar columna para el botón "Detalles"
+                table += '<th>Invoice</th>'; // Agregar columna para el botón "Detalles"
+                table += '<th>Packing List</th>'; // Agregar columna para el botón "Detalles"
+                table += '<th>Editar</th>'; // Agregar columna para el botón "Editar factura"
+                table += '<th>Borrar</th>'; // Agregar columna para el botón "Editar factura"
+                table += '</tr></thead>';
+                table += '<tbody>';
 
+                for (var i = 0; i < facturas.length; i++) {
+                    var factura = facturas[i];
+
+                    table += '<tr>';
+                    table += '<td>' + factura.Id_Factura + '</td>';
+                    table += '<td>' + factura.Referencia_Nexen + '</td>';
+                    table += '<td>' + factura.Proveedor + '</td>';
+                    table += '<td>' + factura.Tax_Id + '</td>';
+                    table += '<td>' + factura.Numero_Factura + '</td>';
+                    table += '<td>' + factura.Fecha_Factura + '</td>';
+                    table += '<td>' + factura.Importador_Exportador + '</td>';
+                    var totalFormateado = '$' + factura.Total_General;
+                    table += '<td>' + totalFormateado + '</td>';
+                    table += '<td>' + factura.Fechope + '</td>';
+                    var horaLegible = new Date('2000-01-01T' + factura.HoraoPe).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    });
+                    table += '<td>' + horaLegible + '</td>';
+                    table += '<td>' + factura.Usuario + '</td>';
+                    table += '<td>' + factura.Estatus + '</td>';
+                    table +=
+                        '<td><button type="button" class="btn btn-primary btn-detalles" data-bs-toggle="modal" data-bs-target="#modalVerDetalleFacturas" data-id="' +
+                        factura.Id_Factura +
+                        '">Detalles</button></td>'; // Agregar botón "Detalles"
+                    table +=
+                        '<td><a class="btn btn-primary btn-detalles" href="generarinvoice.php?id=' +
+                        factura.Id_Factura +
+                        '" target="_blank">&nbsp;&nbsp;<i class="bi bi-printer text-light"></i>&nbsp;&nbsp;</a></td>'; // Agregar botón "Impresion invoice"
+                    table +=
+                        '<td><a class="btn btn-primary btn-detalles" href="generarpacking.php?id=' +
+                        factura.Id_Factura +
+                        '" target="_blank">&nbsp;&nbsp;<i class="bi bi-printer text-light"></i>&nbsp;&nbsp;</a></td>'; // Agregar botón "Impresion packing list"
+                        table +=
+                        '<td><a class="btn btn-warning btn-editarFactura"' +
+                        factura.Id_Factura +
+                        '" numero_factura="' +
+                        factura.Numero_Factura +
+                        '" onclick="editarFacturas(this)">&nbsp;&nbsp;<i class="bi bi-pencil-square text-primary"></i>&nbsp;&nbsp;</a></td>'; // Agregar botón "editar factura"
+                    table +=
+                        '<td><a class="btn btn-danger btn-borrarFactura"  id_factura="' +
+                        factura.Id_Factura +
+                        '" referencia_nexen="' +
+                        factura.Referencia_Nexen +
+                        '" numero_factura="' +
+                        factura.Numero_Factura +
+                        '" fecha_factura="' +
+                        factura.Fecha_Factura +
+                        '" tax_id="' +
+                        factura.Tax_Id +
+                        '" usuario="' +
+                        factura +
+                        '"  onclick="borrarFacturas(this)">&nbsp;&nbsp;<i class="bi bi-trash text-white"></i>&nbsp;&nbsp;</a></td>'; // Agregar botón "borrar factura y sus partidas"
+                    table += '</tr>';
+                }
+
+                table += '</tbody>';
+                table += '</table>';
+
+                // Agregar la tabla al contenido del modal
+                $('#modalVerFacturas .modal-body').html(table);
+
+                // Inicializar DataTables en la tabla
+                $('#modalVerFacturas table').DataTable();
+
+                // Al hacer clic en el botón "Detalles"
+                $('#modalVerFacturas').on('click', '.btn-detalles', function () {
+                    var idFactura = $(this).data('id');
+
+                    // Aquí puedes realizar la lógica para mostrar los detalles de la factura en otro modal o realizar cualquier otra acción
+                    console.log('Mostrar detalles de la factura con ID: ' + idFactura);
+                    //SEgUNDO NIVEL DE AJAX PARA DETALLES***********************************/
+                    $.ajax({
+                        url: '../include/cargarFacturas.php',
+                        method: 'POST',
+                        data: {
+                            opcion: 'obtenerDetalleFacturas',
+                            idFactura: idFactura,
+                        },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                var facturas = response.data;
+
+                                // Construir la tabla de facturas
+                                var table = '<table id="tablaDetalles">';
+                                table += '<thead><tr>';
+                                table += '<th>ID Factura</th>';
+                                table += '<th>Referencia Nexen</th>';
+                                table += '<th>Número Factura</th>';
+                                table += '<th>Número Partida</th>';
+                                table += '<th>Descripción Cove</th>';
+                                table += '<th>Cantidad</th>';
+                                table += '<th>Unidad Medida</th>';
+                                table += '<th>Moneda</th>';
+                                table += '<th>Precio Unitario</th>';
+                                table += '<th>Total</th>';
+                                table += '<th>Peso Bruto</th>';
+                                table += '<th>Peso Neto</th>';
+                                table += '<th>Estatus</th>';
+                                table += '<th>Fecha Operación</th>';
+                                table += '<th>Hora Operación</th>';
+                                table += '<th>Usuario</th>';
+                                table += '<th>Borrar partida</th>';
+                                table += '</tr></thead>';
+                                table += '<tbody>';
+
+                                for (var i = 0; i < facturas.length; i++) {
+                                    var factura = facturas[i];
+
+                                    table += '<tr>';
+                                    table += '<td>' + factura.Id_Factura + '</td>';
+                                    table += '<td>' + factura.Referencia_Nexen + '</td>';
+                                    table += '<td>' + factura.Numero_Factura + '</td>';
+                                    table += '<td>' + factura.Numero_Partida + '</td>';
+                                    table += '<td>' + factura.Descripcion_Cove + '</td>';
+                                    table += '<td>' + factura.Cantidad + '</td>';
+                                    table += '<td>' + factura.Unidad_Medida + '</td>';
+                                    table += '<td>' + factura.Moneda + '</td>';
+                                    table += '<td>' + factura.Precio_Unitario + '</td>';
+                                    table += '<td>' + factura.Total + '</td>';
+                                    table += '<td>' + factura.Peso_Bruto + '</td>';
+                                    table += '<td>' + factura.Peso_Neto + '</td>';
+                                    table += '<td>' + factura.Estatus + '</td>';
+                                    table += '<td>' + factura.Fechope + '</td>';
+                                    table += '<td>' + factura.Horaope + '</td>';
+                                    table += '<td>' + factura.Usuario + '</td>';
+                                    table +=
+                                        '<td><button type="button" class="btn btn-danger btn-borrarPartida" partida="' +
+                                        factura.Numero_Partida +
+                                        '" factura="' +
+                                        factura.Numero_Factura +
+                                        '" onclick="borrarPartidas(this)">Borrar</button></td>'; // Agregar botón "Detalles"
+                                    table += '</tr>';
+                                }
+
+                                table += '</tbody>';
+                                table += '</table>';
+
+                                // Agregar la tabla al contenido del modal
+                                $('#modalVerDetalleFacturas .modal-body').html(table);
+
+                                // Inicializar DataTables en la tabla
+                                $('#modalVerDetalleFacturas table').DataTable();
+
+                                // Al hacer clic en el botón "Detalles"
+                                /*
+                          $('#modalVerFacturas').on('click', '.btn-detalles', function() {
+                              var idFactura = $(this).data('id');
+                              // Aquí puedes realizar la lógica para mostrar los detalles de la factura en otro modal o realizar cualquier otra acción
+                              console.log('Mostrar detalles de la factura con ID: ' + idFactura);
+                          });
+                          */
+                            } else {
+                                console.log('Error al obtener las facturas');
+                                console.log(response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Error en la solicitud AJAX');
+                            console.log(error);
+                            console.log(xhr.responseText);
+                        },
+                    });
+                });
+            } else {
+                console.log('Error al obtener las facturas');
+                console.log(response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error en la solicitud AJAX');
+            console.log(error);
+            console.log(xhr.responseText);
+        },
+    });
+}
+//Function para cargar datos en modal Cargar factura
+function modalCargarFactura() {
+    var nombreOperador = $('#nombre_operador_o').val();
+
+    if (nombreOperador === '') {
+        const mensaje='Falta seleccionar el campo de nombre del operador';
+        SweetView(mensaje);
+        // return;
+    } else {
+        // Realizar la solicitud AJAX aquí y usar el valor de nombreOperador en la consulta SQL
+
+        $.ajax({
+            url: '../include/cargarFacturas.php',
+            method: 'POST',
+            data: { opcion: 'leerEmpresas', nombreOperador: nombreOperador },
+            dataType: 'json',
+            success: function (response) {
+                // Procesar la respuesta del servidor y mostrarla en el modal
+
+                // Ejemplo: Recorrer los datos y mostrarlos en la consola
+                for (var i = 0; i < response.length; i++) {
+                    var empresa = response[i];
+
+                    $('#modal_nombre_operador').val(empresa.Razon_Social);
+                    $('#modal_rfc_operador').val(empresa.RFC);
+                    $('#modal_domicilio_operador').val(empresa.DOMICILIO_FISCAL);
+
+                    // console.log(empresa.ID_EMPRESA, empresa.Razon_Social, empresa.RFC, empresa.DOMICILIO_FISCAL, empresa.REPRESENTANTE_LEGAL, empresa.ESTATUS);
+                }
+            },
+            error: function () {
+                const mensaje='Error al obtener los datos del servidor';
+                SweetView(mensaje);
+            },
+        });
+    }
+}
 // Función para enviar la solicitud AJAX
 function enviarSolicitudAjax() {
     // Comprobar si la tabla tiene registros

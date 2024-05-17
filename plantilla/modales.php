@@ -1,4 +1,5 @@
-        <div class="modal" id="cerrarSesion" data-bs-backdrop="static" tabindex="-1" aria-labelledby="cerrarSesionLabel" aria-hidden="true">
+        <div class="modal" id="cerrarSesion" data-bs-backdrop="static" tabindex="-1" aria-labelledby="cerrarSesionLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -64,55 +65,61 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCerrarModalReporte">Cerrar</button>
-                        <button type="button" class="btn btn-primary" id="btnDescargarReporteDocsFaltantes">Descargar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            id="btnCerrarModalReporte">Cerrar</button>
+                        <button type="button" class="btn btn-primary"
+                            id="btnDescargarReporteDocsFaltantes">Descargar</button>
                     </div>
                 </div>
             </div>
         </div>
 
 
-<!--MODAL VER FACTURAS Y DETALLE FACTURAS (MODAL DOBLE)-->
-<div class="container mt-3 text-center">
-    <div class="row">
-        <div class="modal fade" id="modalVerFacturas" tabindex="-1"  aria-hidden="true">
+        <!--MODAL VER FACTURAS Y DETALLE FACTURAS (MODAL DOBLE)-->
+        <div class="modal fade" id="modalVerFacturas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header nft">
-                        <h5 class="modal-title" >Ver Facturas</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Ver Facturas</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body ">
+                    <div id="loadingMessage" style="display: none;">Cargando...</div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12 table-responsive">
+                                <table id="tablefacturas" class="table text-center">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Referencia Nexen</th>
+                                            <th>Proveedor</th>
+                                            <th>Tax_Id</th>
+                                            <th>Numero Factura</th>
+                                            <th>Fecha Factura</th>
+                                            <th>Importador Exportador</th>
+                                            <th>Total General</th>
+                                            <th>Usuario</th>
+                                            <th>Detalles</th>
+                                            <th>Invoice</th>
+                                            <th>Packing List</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
 
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="modal fade"id="modalVerFacturas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header nft">
-        <h5 class="modal-title" id="staticBackdropLabel">Ver Facturas</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-            <div class="col-12">
-                
-            </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
