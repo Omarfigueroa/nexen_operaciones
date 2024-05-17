@@ -332,15 +332,7 @@ if (!isValid) {
     $('#precio_total').keyup(calcularPrecioTotal);
 
     // Función para calcular el precio total
-    function calcularPrecioTotal() {
-        var cantidad = parseFloat($('#modal_cantidad').val());
-        var precioTotal = parseFloat($('#precio_total').val());
-
-        if (!isNaN(cantidad) && !isNaN(precioTotal)) {
-            var precioUnitario = precioTotal / cantidad;
-            $('#precio_unitario').val(precioUnitario.toFixed(7));
-        }
-    }
+ 
 
     //Seccion modal edit detalles
     // Evento keyup del campo de cantidad
@@ -369,43 +361,8 @@ if (!isValid) {
     });
 });
 
-//Function para cargar datos en modal Cargar factura
-function modalCargarFactura() {
-    var nombreOperador = $('#nombre_operador_o').val();
 
-    if (nombreOperador === '') {
-        const mensaje='Falta seleccionar el campo de nombre del operador';
-        SweetView(mensaje);
-        // return;
-    } else {
-        // Realizar la solicitud AJAX aquí y usar el valor de nombreOperador en la consulta SQL
 
-        $.ajax({
-            url: '../include/cargarFacturas.php',
-            method: 'POST',
-            data: { opcion: 'leerEmpresas', nombreOperador: nombreOperador },
-            dataType: 'json',
-            success: function (response) {
-                // Procesar la respuesta del servidor y mostrarla en el modal
-
-                // Ejemplo: Recorrer los datos y mostrarlos en la consola
-                for (var i = 0; i < response.length; i++) {
-                    var empresa = response[i];
-
-                    $('#modal_nombre_operador').val(empresa.Razon_Social);
-                    $('#modal_rfc_operador').val(empresa.RFC);
-                    $('#modal_domicilio_operador').val(empresa.DOMICILIO_FISCAL);
-
-                    // console.log(empresa.ID_EMPRESA, empresa.Razon_Social, empresa.RFC, empresa.DOMICILIO_FISCAL, empresa.REPRESENTANTE_LEGAL, empresa.ESTATUS);
-                }
-            },
-            error: function () {
-                const mensaje='Error al obtener los datos del servidor';
-                SweetView(mensaje);
-            },
-        });
-    }
-}
 // Función para enviar la solicitud AJAX
 function enviarSolicitudAjax() {
     // Comprobar si la tabla tiene registros

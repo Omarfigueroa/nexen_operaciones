@@ -120,3 +120,204 @@
                 </div>
             </div>
         </div>
+
+
+
+    <!-- EJEMPLO MODAL CARGAR FACTURA Y ASOCIAR (MODAL DOBLE) -->
+    <div class="modal fade" id="modalCargarFacturas" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                            <div class="modal-dialog modal-xl text-center">
+                                <div class="modal-content text-center">
+                                    <div class="modal-body modal-dialog-scrollable">
+                                        <div class="form-table-consulta">
+                                            <h1>CARGAR FACTURAS</h1>
+                                        </div>
+                                        <!--<form action="../include/guardar_factura.php" method="POST">-->
+                                        <!-- <div class="form-tabla-contenedor">  -->
+                                        <div class="row my-1">
+                                            <div class="col-3">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_proveedor">
+                                                    Agregar Proveedor +
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row my-1">
+                                            <div class="col-sm-6">
+                                                <h6 class="text-center">Proveedor</h6>
+                                                <div class="selectprueba">
+                                                    <select class="align-text-bottom form-control selectpicker validSelect" data-show-subtext="true" data-live-search="true" id="proveedor_fact" name="proveedor_fact" onchange="cambiarProveedor(this);">
+                                                        <option value="" selected disabled>Selecciona una opción</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <h6 class="text-center">Editar proveedor</h6>
+                                                <button id="btnEditarProveedor" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modal_editar_proveedor" disabled><i class="bi bi-pen"></i></button>
+                                            </div>
+                                            <div class="col-sm-4 ">
+                                                <h6 class="text-center">País de origen</h6>
+                                                <input type="text" class="align-text-bottom form-control validText" id="modal_pais_origen" oninput="quitarAcentosYComillas(this)" name="num_factura" placeholder="Introduce país de origen" required>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h6 class="text-center">Domicilio proveedor</h6>
+                                                <input type="text" class="align-text-bottom form-control" id="modal_domicilio_proveedor" name="modal_domicilio_proveedor" placeholder="Introduce proveedor" required disabled>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row my-1">
+                                            <div class="col-sm-4">
+                                                <h6 class="text-center">Número de Factura</h6>
+                                                <input type="text" class="align-text-bottom form-control validFactura" id="modal_num_factura" oninput="quitarAcentosYComillas(this)" name="num_factura" placeholder="Introduce # factura" required>
+                                            </div>
+                                            <div class="col-sm-4 validando">
+                                                <h6 class="text-center">Fecha de Factura</h6>
+                                                <input type="date" class="align-text-bottom form-control validDate" id="modal_fecha_factura" name="fecha_factura" required value="">
+                                            </div>
+                                            <div class="col-sm-2 ">
+                                                <h6 class="text-center">TAX-ID</h6>
+                                                <input type="text" class="align-text-bottom form-control" name="tax_id" id="tax_id" value="" required disabled placeholder="Escoger proveedor">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <h6 class="text-center">Incoterms</h6>
+                                                <select class="align-text-bottom form-control selectpicker validSelect" id="incoterms" name="incoterms" data-live-search="true">
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div class="row my-1">
+                                            <div class="col-sm-8">
+                                                <h6 class="text-center">Operador</h6>
+                                                <input type="text" class="form-control" value="" id="modal_nombre_operador" name="modal_nombre_operador" disabled>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <h6 class="text-center">RFC</h6>
+                                                <input type="text" class="align-text-bottom form-control" id="modal_rfc_operador" name="modal_rfc_operador" placeholder="" disabled value="">
+                                            </div>
+                                        </div>
+                                        <div class="row my-1">
+                                            <div class="col">
+                                                <h6 class="text-center">Domicilio Fiscal Operador</h6>
+                                                <input type="text" class="align-text-bottom form-control" id="modal_domicilio_operador" name="modal_domicilio_operador" placeholder="" disabled value="">
+                                            </div>
+                                        </div>
+                                        <div class="partidas">
+                                            <div class="row my-1">
+                                                <div class="col-sm-6 validando">
+                                                    <h6 class="text-center">Descripción Cove (Español)</h6>
+                                                    <textarea rows="" class="align-text-bottom form-control validDescription" id="desc_factura" oninput="quitarAcentosYComillas(this)" name="desc_factura" cols="" required></textarea>
+                                                    <!-- <input type="tex"  class="align-text-bottom form-control"> -->
+                                                </div>
+                                                <div class="col-sm-6 validando">
+                                                    <h6 class="text-center">Cove Description (English)</h6>
+                                                    <textarea rows="" class="align-text-bottom form-control validDescription" id="desc_factura_i" oninput="quitarAcentosYComillas(this)" name="desc_factura_i" cols="" required></textarea>
+                                                    <!-- <input type="tex"  class="align-text-bottom form-control"> -->
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-3 validando">
+                                                    <h6 class="text-center">Cantidad</h6>
+                                                    <input type="text" class="align-text-bottom form-control validNumber" id="modal_cantidad" name="modal_valor_factura" placeholder="Introduce cantidad" pattern="^[0-9]+">
+                                                </div>
+                                                <div class="col-sm-2 validando">
+                                                    <h6 class="text-center">Medida</h6>
+                                                    <select class="align-text-bottom form-control selectpicker validSelect" id="medida" name="medida" data-live-search="true">
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-3 ">
+                                                    <h6 class="text-center">Precio Unitario</h6>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control validNumber" id="precio_unitario" name="precio_unitario" placeholder="Introduce el Precio Unitario 00.00" disabled hidden>
+                                                        <input type="text" class="form-control validNumber" id="precio_fishing" name="precio_fishing" placeholder="Introduce el Precio Unitario 00.00" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2 validando">
+                                                    <h6 class="text-center">Moneda</h6>
+                                                    <select class="align-text-bottom form-control selectpicker validSelect" id="modal_moneda" name="modal_moneda" data-live-search="true">
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 validando">
+                                                    <h6 class="text-center">Precio Total</h6>
+                                                    <input type="text" class="align-text-bottom form-control validNumber" id="precio_total" name="precio_total" placeholder="Total">
+                                                </div>
+                                            </div>
+                                            <div class="row pt-2 pb-2 justify-content-end">
+                                                <div class="col-sm-2 validando">
+                                                    <h6 class="text-center">Mark</h6>
+                                                    <input type="text" class="align-text-bottom form-control validMark" id="modal_mark" oninput="quitarAcentosYComillas(this)" name="modal_mark" placeholder="Mark N/M">
+                                                </div>
+                                                <div class="col-sm-2 validando">
+                                                    <h6 class="text-center">Peso Bruto</h6>
+                                                    <input type="text" min="0" class="align-text-bottom form-control validNumber" id="modal_peso_bruto" name="peso_bruto" placeholder="Bruto">
+                                                </div>
+                                                <div class="col-sm-2 validando">
+                                                    <h6 class="text-center">Peso Neto</h6>
+                                                    <input type="text" min="0" class="align-text-bottom form-control validNumber" id="modal_peso_neto" name="peso_neto" placeholder="Neto">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- </div> -->
+                                        <div class="row my-1">
+                                            <div class="col-sm-3 "></div>
+                                            <div class="col-sm-6 text-center">
+                                                <button type="button" class="btn btn-primary" id="btnAgregar">Agregar</button>
+                                            </div>
+                                            <div class="col-sm-3 "></div>
+                                        </div>
+                                        <br>
+                                        <div class="embed-responsive card">
+                                            <div class="container table-responsive card-body">
+                                                <table class="table w-100 p-3 table-responsive table-scrollable table-striped table-hover" id="tablaFacturas">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col"># FACTURA</th>
+                                                            <th scope="col">DESCRIPCIÓN COVE</th>
+                                                            <th scope="col">COVE DESCRIPTION</th>
+                                                            <th scope="col">CANTIDAD</th>
+                                                            <th scope="col">UNIDAD</th>
+                                                            <th scope="col">VALOR UNITARIO</th>
+                                                            <th scope="col">MONEDA</th>
+                                                            <th scope="col">TOTAL PARTIDA</th>
+                                                            <th scope="col">PESO BRUTO</th>
+                                                            <th scope="col">PESO NETO</th>
+                                                            <th scope="col">MARK</th>
+                                                            <th scope="col">ACCION</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- Aquí se agregarán las filas dinámicamente -->
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th scope="row"></th>
+                                                            <th scope="row"></th>
+
+                                                            <th scope="col">Total:</th>
+                                                            <th scope="row"></th>
+                                                            <th scope="col">
+                                                                <span id="total">0</span>
+                                                            </th>
+                                                            <th scope="row"></th>
+                                                            <th scope="row"></th>
+                                                            <th scope="row"></th>
+                                                            <th scope="col" id="total_peso_bruto" value="0">0</th>
+                                                            <th scope="col" id="total_peso_neto" value="0">0</th>
+                                                            <th scope="row"></th>
+                                                            <th scope="row"></th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div><br><br>
+                                    <div class="modal-footer ">
+                                        <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                                        <button id="btnGuardarFacturas" type="button" class="btn btn-lg btn-success" onclick="enviarSolicitudAjax()">
+                                            <span id="spinner_insert" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--</form>-->
+                            </div>
+                        </div>
