@@ -596,3 +596,84 @@ function modalCargarFactura() {
         });
     }
 }
+
+function enviarSolicitudAjax() {
+  if ($('#tablaFacturas tbody tr').length === 0) {
+      SweetView('No hay partidas en la tabla. No se puede guardar');
+      return;
+  }
+
+  const data = {
+      opcion: 'insertarOperacionFactura',
+      referencia_nexen: $('#referencia_nexen').val(),
+      modal_pais_origen: $('#modal_pais_origen').val(),
+      nombreOperador: $('#modal_nombre_operador').val(),
+      rfcOperador: $('#modal_rfc_operador').val(),
+      domOperador: $('#modal_domicilio_operador').val(),
+      numFactura: $('#modal_num_factura').val(),
+      proveedorFact: $('#proveedor_fact').val(),
+      fechaFactura: $('#modal_fecha_factura').val(),
+      taxId: $('#tax_id').val(),
+      total: $('#total').val(),
+      total_peso_bruto: $('#total_peso_bruto').val(),
+      total_peso_neto: $('#total_peso_neto').val()
+  };
+  Object.entries(data).forEach(([key, value]) => {
+    console.log(`${key}: ${value}`);
+});
+
+  // $('#spinner_insert').removeClass('d-none');
+  // $('#btnGuardarFacturas').prop('disabled', true);
+
+  // $.ajax({
+  //     url: '../include/Facturas/cargarFacturas.php',
+  //     method: 'POST',
+  //     data: data,
+  //     dataType: 'json',
+  //     beforeSend: () => $('#loadingModal').modal('show'),
+  //     success: (response) => {
+  //         if (!response.success) {
+  //             alert(response.message);
+  //             location.reload();
+  //             return;
+  //         }
+
+  //         const { lastId, referencia_nexen } = response;
+  //         const numFactura = $('#modal_num_factura').val();
+  //         const incoterms = $('#incoterms').val();
+  //         let successShown = false;
+
+  //         $('#tablaFacturas tbody tr').each((index, element) => {
+  //             const rowData = {
+  //                 opcion: 'insertarFacturaDetalle',
+  //                 lastId,
+  //                 referencia_nexen,
+  //                 numFactura,
+  //                 incoterms,
+  //                 partida: $(element).find('th').text(),
+  //                 descripcion: $(element).find('td:nth-child(2)').text(),
+  //                 descripcion_i: $(element).find('td:nth-child(3)').text(),
+  //                 cantidad: parseFloat($(element).find('td:nth-child(4)').text()),
+  //                 medida: $(element).find('td:nth-child(5)').text(),
+  //                 precioUnitario: parseFloat($(element).find('td:nth-child(6)').text()),
+  //                 moneda: $(element).find('td:nth-child(7)').text(),
+  //                 total_partida: parseFloat($(element).find('td:nth-child(8)').text()),
+  //                 peso_bruto: $(element).find('td:nth-child(9)').text(),
+  //                 peso_neto: $(element).find('td:nth-child(10)').text(),
+  //                 mark: $(element).find('td:nth-child(11)').text()
+  //             };
+
+  //             $.post('../include/cargarFacturas.php', rowData, (response) => {
+  //                 if (!successShown) {
+  //                     SweetViewTrue(response.message, () => location.reload());
+  //                     successShown = true;
+  //                 }
+  //             }, 'json').fail((xhr, status, error) => {
+  //                 console.error('Error al realizar el insert para factura ' + lastId, error);
+  //             });
+  //         });
+  //     },
+  //     error: (xhr, status, error) => console.error(error),
+  //     complete: () => $('#loadingModal').modal('hide')
+  // });
+}

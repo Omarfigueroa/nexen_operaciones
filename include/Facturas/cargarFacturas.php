@@ -4,25 +4,32 @@ date_default_timezone_set('America/Mexico_City');
 
 class OperacionFacturaHandler {
     private $conn_bd;
+    private $usuario;
+    private $nombre_usuario;
 
     public function __construct($conexion) {
         $this->conn_bd = $conexion;
     }
 
-    public function obtenerNombreUsuario() {
+    public function obtenerSesion() {
         session_start();
         if (!isset($_SESSION['usuario_nexen'])) {
             header('Location: login.php');
             exit();
         }
+        $this->usuario = $_SESSION['usuario_nexen'];
+    }
 
-        $usuario = $_SESSION['usuario_nexen'];
+    public function obtenerNombreUsuario() {
+        $this->obtenerSesion();
+
         $query = "SELECT nombre_usuario FROM [dbo].[Usuarios_Login] WHERE Usuario = :usuario";
         $stmt = $this->conn_bd->prepare($query);
-        $stmt->bindParam(':usuario', $usuario);
+        $stmt->bindParam(':usuario', $this->usuario);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['nombre_usuario'];
+        $this->nombre_usuario = $result['nombre_usuario'];
+        return $this->nombre_usuario;
     }
 
     public function leerEmpresas($nombreOperador) {
@@ -35,6 +42,8 @@ class OperacionFacturaHandler {
     }
 
     public function insertarOperacionFactura($data) {
+        $this->obtenerSesion();
+        
         $referencia_nexen = $data['referencia_nexen'];
         $modal_pais_origen = $data['modal_pais_origen'];
         $nombreOperador = $data['nombreOperador'];
@@ -47,7 +56,6 @@ class OperacionFacturaHandler {
         $total = $data['total'];
         $fechope = date('Y-m-d');
         $horaope = date('H:i:s');
-        $usuario = $_SESSION['usuario_nexen'];
         $total_peso_bruto = $data['total_peso_bruto'];
         $total_peso_neto = $data['total_peso_neto'];
 
@@ -60,9 +68,8 @@ class OperacionFacturaHandler {
         if ($count > 0) {
             return ['success' => false, 'message' => 'Ya existe el numero de factura: '.$numFactura.' intenta con otro.'];
         } else {
-            $query = "INSERT INTO [Operacion_Facturas] ( [Referencia_Nexen], [Proveedor], [Tax_Id], [Numero_Factura], [Fecha_Factura], [Importador_Exportador], [RFC_Importador_Exportador], [Domicilio_Fiscal], [Total_General], [Fechope], [HoraoPe], [Usuario], [Estatus], [PAIS_ORIGEN], [PESO_BRUTO_TOTAL], [PESO_NETO_TOTAL]) 
-            VALUES (:referencia_nexen, :proveedorFact, :taxId, :numFactura, :fechaFactura, :nombreOperador, :rfcOperador, :domOperador, :total, :fechope, :horaope, :usuario, 'A', :modal_pais_origen, :total_peso_bruto, :total_peso_neto)";
-
+            $query = "INSERT INTO [Operacion_Facturas] ([Referencia_Nexen], [Proveedor], [Tax_Id], [Numero_Factura], [Fecha_Factura], [Importador_Exportador], [RFC_Importador_Exportador], [Domicilio_Fiscal], [Total_General], [Fechope], [HoraoPe], [Usuario], [Estatus], [PAIS_ORIGEN], [PESO_BRUTO_TOTAL], [PESO_NETO_TOTAL]) 
+                      VALUES (:referencia_nexen, :proveedorFact, :taxId, :numFactura, :fechaFactura, :nombreOperador, :rfcOperador, :domOperador, :total, :fechope, :horaope, :usuario, 'A', :modal_pais_origen, :total_peso_bruto, :total_peso_neto)";
             $stmt = $this->conn_bd->prepare($query);
             $stmt->bindParam(':referencia_nexen', $referencia_nexen);
             $stmt->bindParam(':modal_pais_origen', $modal_pais_origen);
@@ -76,7 +83,7 @@ class OperacionFacturaHandler {
             $stmt->bindParam(':total', $total);
             $stmt->bindParam(':fechope', $fechope);
             $stmt->bindParam(':horaope', $horaope);
-            $stmt->bindParam(':usuario', $usuario);
+            $stmt->bindParam(':usuario', $this->usuario);
             $stmt->bindParam(':total_peso_bruto', $total_peso_bruto);
             $stmt->bindParam(':total_peso_neto', $total_peso_neto);
 
