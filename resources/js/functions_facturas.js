@@ -1,415 +1,179 @@
 document.addEventListener("DOMContentLoaded", function () {
-  /**
-   * funcion para agregar partida en tabla de facturas.
-   */
   var facturaCount = 1;
   var total = 0;
   actualizarNumerosFactura();
-  // Evento click del botón "Agregar"
+
   $("#btnAgregar").click(function () {
-    // //Comprobacion de campos partida
-    // // Reiniciar clases de validación
-    // $(".form-control").removeClass("is-invalid");
-    const proveedorSelect = $("#proveedor_fact").val();
-    const Pais_origen = $("#modal_pais_origen").val();
-    const Num_Factura = $("#modal_num_factura").val();
-    const Fecha_Factura = $("#modal_fecha_factura").val();
-    const incoterms = $("#incoterms").val();
-    const CoveEspañol = $("#desc_factura").val();
-    const CoveInlges = $("#desc_factura_i").val();
-    const Cantidad = $("#modal_cantidad").val();
-    const Medida = $("#medida").val();
-    const Precio_Unitario = $("#precio_unitario").val();
-    const Moneda = $("#modal_moneda").val();
-    const Precio_Total = $("#precio_total").val();
-    const Mark = $("#modal_mark").val();
-    const Peso_Bruto = $("#modal_peso_bruto").val();
-    const Peso_Neto = $("#modal_peso_neto").val();
-
-    const arrayValidator = [
-      proveedorSelect,
-      Pais_origen,
-      Num_Factura,
-      Fecha_Factura,
-      incoterms,
-      CoveEspañol,
-      CoveInlges,
-      Cantidad,
-      Medida,
-      Precio_Unitario,
-      Moneda,
-      Precio_Total,
-      Mark,
-      Peso_Bruto,
-      Peso_Neto,
-    ];
-    //CONSTANTE Y RECORRIDO DE ARRAY PARA VALIDACION DE CAMPOS
-    var isValid = true;
-    arrayValidator.forEach((value, index) => {
-      const fieldId = getFieldId(index);
-      const field = $("#" + fieldId);
-
-      if (
-        value === null ||
-        value === "" ||
-        value === undefined ||
-        value === "undefined"
-      ) {
-        $("#proveedor_fact").selectpicker("destroy");
-        $("#incoterms").selectpicker("destroy");
-        $("#medida").selectpicker("destroy");
-        $("#modal_moneda").selectpicker("destroy");
-
-        $("#" + fieldId).addClass("is-invalid");
-
-        $("#proveedor_fact").selectpicker("render");
-        $("#incoterms").selectpicker("render");
-        $("#medida").selectpicker("render");
-        $("#modal_moneda").selectpicker("render");
-
-        isValid = false;
-      } else {
-        $("#proveedor_fact").selectpicker("destroy");
-        $("#incoterms").selectpicker("destroy");
-        $("#medida").selectpicker("destroy");
-        $("#modal_moneda").selectpicker("destroy");
-
-        $("#" + fieldId).removeClass("is-invalid");
-
-        $("#proveedor_fact").selectpicker("render");
-        $("#incoterms").selectpicker("render");
-        $("#medida").selectpicker("render");
-        $("#modal_moneda").selectpicker("render");
-      }
-    });
-    //FUNCION PARA ASIGNAR ID CONFORME AL ARRAY
-    function getFieldId(index) {
-      switch (index) {
-        case 0:
-          return "proveedor_fact";
-        case 1:
-          return "modal_pais_origen";
-        case 2:
-          return "modal_num_factura";
-        case 3:
-          return "modal_fecha_factura";
-        case 4:
-          return "incoterms";
-        case 5:
-          return "desc_factura";
-        case 6:
-          return "desc_factura_i";
-        case 7:
-          return "modal_cantidad";
-        case 8:
-          return "medida";
-        case 9:
-          return "precio_unitario";
-        case 10:
-          return "modal_moneda";
-        case 11:
-          return "precio_total";
-        case 12:
-          return "modal_mark";
-        case 13:
-          return "modal_peso_bruto";
-        case 14:
-          return "modal_peso_neto";
-        default:
-          return "";
-      }
-    }
-
-    if (!isValid) {
-      // Crear un array de objetos con dos campos cada uno
-      var mensajeserrores = [
-        { idcampo: "#proveedor_fact", mensaje: "Proveedor" },
-        { idcampo: "#modal_pais_origen", mensaje: "País" },
-        { idcampo: "#modal_num_factura", mensaje: "Número de Factura" },
-        { idcampo: "#modal_fecha_factura", mensaje: "Fecha" },
-        { idcampo: "#incoterms", mensaje: "Incoterms" },
-        { idcampo: "#desc_factura", mensaje: "Descripción en Español" },
-        { idcampo: "#desc_factura_i", mensaje: "Descripción en Inglés" },
-        { idcampo: "#modal_cantidad", mensaje: "Cantidad" },
-        { idcampo: "#medida", mensaje: "Medida" },
-        { idcampo: "#modal_moneda", mensaje: "Moneda" },
-        { idcampo: "#precio_total", mensaje: "Precio Total" },
-        { idcampo: "#modal_mark", mensaje: "Marcador" },
-        { idcampo: "#modal_peso_bruto", mensaje: "Peso Bruto" },
-        { idcampo: "#modal_peso_neto", mensaje: "Peso Neto" },
+      const fields = [
+          "proveedor_fact", "modal_pais_origen", "modal_num_factura",
+          "modal_fecha_factura", "incoterms", "desc_factura",
+          "desc_factura_i", "modal_cantidad", "medida",
+          "precio_unitario", "modal_moneda", "precio_total",
+          "modal_mark", "modal_peso_bruto", "modal_peso_neto"
       ];
 
-      // Variable para almacenar los mensajes de error
-      var mensajesErroresHTML = "";
+      const data = fields.reduce((obj, id) => {
+          obj[id] = $("#" + id).val();
+          return obj;
+      }, {});
 
-      // Variable para indicar si hay errores
-      var isValid = true;
+      if (!validarCampos(data, fields)) {
+          return;
+      }
 
-      mensajeserrores.forEach(function (item) {
-        var valor = $(item.idcampo).val();
+      agregarFila(facturaCount, data);
+      fields.forEach(id => $("#" + id).val(""));
+      $(".form-control").removeClass("is-invalid is-valid");
+      facturaCount++;
+  });
 
-        if (valor === "" || valor === null || valor === undefined) {
-          $(item.idcampo).addClass("is-invalid");
-          isValid = false;
-
-          mensajesErroresHTML += `${item.mensaje}, `;
-        } else {
-          $(item.idcampo).removeClass("is-invalid");
-        }
+  function validarCampos(data, fields) {
+      let isValid = true;
+      fields.forEach(id => {
+          const field = $("#" + id);
+          if (!data[id]) {
+              field.addClass("is-invalid");
+              isValid = false;
+          } else {
+              field.removeClass("is-invalid");
+          }
       });
 
-      // Mostrar SweetAlert con los mensajes de error
       if (!isValid) {
-        const mensaje = mensajesErroresHTML;
-        SweetView(mensaje);
-        return;
+          const mensaje = fields.filter(id => !data[id]).map(id => obtenerNombreCampo(id)).join(", ");
+          SweetView(mensaje);
       }
-    }
-    var factura = facturaCount;
-    agregarFila(
-      factura,
-      CoveEspañol,
-      CoveInlges,
-      Cantidad,
-      Medida,
-      Precio_Unitario,
-      Moneda,
-      Precio_Total,
-      Peso_Bruto,
-      Peso_Neto,
-      Mark
-    );
-    $("#proveedor_fact").val("");
-    $("#modal_pais_origen").val("");
-    $("#modal_num_factura").val("");
-    $("#modal_fecha_factura").val("");
-    $("#incoterms").val("");
-    $("#desc_factura").val("");
-    $("#desc_factura_i").val("");
-    $("#modal_cantidad").val("");
-    $("#medida").val("");
-    $("#precio_unitario").val("");
-    $("#modal_moneda").val("");
-    $("#precio_total").val("");
-    $("#modal_mark").val("");
-    $("#modal_peso_bruto").val("");
-    $("#modal_peso_neto").val("");
 
-    $(".form-control").removeClass("is-invalid");
-    $(".form-control").removeClass("is-valid");
-    facturaCount++;
-  });
-  // Función para actualizar el número de factura en las filas
-  function actualizarNumerosFactura() {
-    var filas = $("#tablaFacturas tbody tr");
-    filas.each(function (index) {
-      var numeroFactura = index + 1;
-      $(this).find("th").text(numeroFactura);
-      $(this).find(".btn-borrar").attr("data-factura", numeroFactura);
-    });
+      return isValid;
   }
-  // Función para agregar una fila a la tabla
-  function agregarFila(
-    factura,
-    descripcion,
-    descripcion_i,
-    cantidad,
-    medida,
-    precioUnitario,
-    moneda,
-    precio_total,
-    peso_bruto,
-    peso_neto,
-    mark
-  ) {
-    var precioTotal = precio_total;
-    total += precioTotal;
-    var fila =
-      "<tr>" +
-      '<th scope="row">' +
-      factura +
-      "</th>" +
-      "<td>" +
-      descripcion +
-      "</td>" +
-      "<td>" +
-      descripcion_i +
-      "</td>" +
-      "<td>" +
-      cantidad +
-      "</td>" +
-      "<td>" +
-      medida +
-      "</td>" +
-      "<td>" +
-      precioUnitario +
-      "</td>" +
-      "<td>" +
-      moneda +
-      "</td>" +
-      "<td>" +
-      precio_total +
-      "</td>" +
-      "<td>" +
-      peso_bruto +
-      "</td>" +
-      "<td>" +
-      peso_neto +
-      "</td>" +
-      "<td>" +
-      mark +
-      "</td>" +
-      "<td>" +
-      '<button class="btn btn-danger btn-borrar" data-factura="' +
-      factura +
-      '">Borrar</button>' +
-      "</td>" +
-      "</tr>";
 
-    $("#tablaFacturas tbody").append(fila);
+  function obtenerNombreCampo(id) {
+      const nombres = {
+          proveedor_fact: "Proveedor",
+          modal_pais_origen: "País",
+          modal_num_factura: "Número de Factura",
+          modal_fecha_factura: "Fecha",
+          incoterms: "Incoterms",
+          desc_factura: "Descripción en Español",
+          desc_factura_i: "Descripción en Inglés",
+          modal_cantidad: "Cantidad",
+          medida: "Medida",
+          precio_unitario: "Precio Unitario",
+          modal_moneda: "Moneda",
+          precio_total: "Precio Total",
+          modal_mark: "Marcador",
+          modal_peso_bruto: "Peso Bruto",
+          modal_peso_neto: "Peso Neto"
+      };
+      return nombres[id] || id;
+  }
 
-    // Agregar evento para borrar la fila cuando se haga clic en el botón
-    $('.btn-borrar[data-factura="' + factura + '"]').click(function () {
-      var fila = $(this).closest("tr");
-      var precioTotal = parseFloat(fila.find("td:nth-child(8)").text());
+  function agregarFila(factura, data) {
+      const fila = `
+          <tr>
+              <th scope="row">${factura}</th>
+              <td>${data.desc_factura}</td>
+              <td>${data.desc_factura_i}</td>
+              <td>${data.modal_cantidad}</td>
+              <td>${data.medida}</td>
+              <td>${data.precio_unitario}</td>
+              <td>${data.modal_moneda}</td>
+              <td>${data.precio_total}</td>
+              <td>${data.modal_peso_bruto}</td>
+              <td>${data.modal_peso_neto}</td>
+              <td>${data.modal_mark}</td>
+              <td><button class="btn btn-danger btn-borrar" data-factura="${factura}">Borrar</button></td>
+          </tr>
+      `;
 
-      //pesos totales
-      var modal_peso_bruto = parseFloat(fila.find("td:nth-child(9)").text());
-      var modal_peso_neto = parseFloat(fila.find("td:nth-child(10)").text());
+      $("#tablaFacturas tbody").append(fila);
 
-      fila.remove();
+      $(`.btn-borrar[data-factura="${factura}"]`).click(function () {
+          const fila = $(this).closest("tr");
+          const precioTotal = parseFloat(fila.find("td:nth-child(8)").text());
+          const modal_peso_bruto = parseFloat(fila.find("td:nth-child(9)").text());
+          const modal_peso_neto = parseFloat(fila.find("td:nth-child(10)").text());
 
-      // Restar precioTotal solo si es mayor a 0
-      if (precioTotal > 0) {
-        total -= precioTotal;
-      }
+          fila.remove();
 
-      // Restar pesos solo si son mayores a 0
-      if (modal_peso_bruto > 0) {
-        total_peso_bruto -= modal_peso_bruto;
-      }
-      if (modal_peso_neto > 0) {
-        total_peso_neto -= modal_peso_neto;
-      }
+          total = Math.max(0, total - precioTotal);
+          total_peso_bruto = Math.max(0, total_peso_bruto - modal_peso_bruto);
+          total_peso_neto = Math.max(0, total_peso_neto - modal_peso_neto);
 
-      // Asignar valor mínimo de 0 al total si es negativo
-      if (total < 0) {
-        total = 0;
-      }
-
-      // Asignar valor mínimo de 0 a los pesos si son negativos
-      if (total_peso_bruto < 0) {
-        total_peso_bruto = 0;
-      }
-      if (total_peso_neto < 0) {
-        total_peso_neto = 0;
-      }
-
-      $("#total").text(total.toFixed(7));
-      $("#total").val(total.toFixed(7));
-
-      // total pesos asignacion
-      $("#total_peso_bruto").text(total_peso_bruto.toFixed(7));
-      $("#total_peso_bruto").val(total_peso_bruto.toFixed(7));
-      $("#total_peso_neto").text(total_peso_neto.toFixed(7));
-      $("#total_peso_neto").val(total_peso_neto.toFixed(7));
-
-        actualizarTotal();
-
-        actualizarNumerosFactura();
-    });
+          actualizarTotal();
+          actualizarNumerosFactura();
+      });
 
       actualizarTotal();
-
       actualizarNumerosFactura();
   }
-  // Función para actualizar el valor total
+
+  function actualizarNumerosFactura() {
+      $("#tablaFacturas tbody tr").each(function (index) {
+          const numeroFactura = index + 1;
+          $(this).find("th").text(numeroFactura);
+          $(this).find(".btn-borrar").attr("data-factura", numeroFactura);
+      });
+  }
+
   function actualizarTotal() {
-    var total = new Decimal(0);
-    var total_peso_bruto = new Decimal(0);
-    var total_peso_neto = new Decimal(0);
+      let total = 0;
+      let total_peso_bruto = 0;
+      let total_peso_neto = 0;
 
-    // Iterar sobre todas las filas y sumar los precios totales
-    $("#tablaFacturas tbody tr").each(function () {
-      var cantidad = new Decimal($(this).find("td:nth-child(4)").text());
-      var precioUnitario = new Decimal($(this).find("td:nth-child(6)").text());
-      var modal_peso_bruto = new Decimal(
-        $(this).find("td:nth-child(9)").text()
-      );
-      var modal_peso_neto = new Decimal(
-        $(this).find("td:nth-child(10)").text()
-      );
+      $("#tablaFacturas tbody tr").each(function () {
+          total += parseFloat($(this).find("td:nth-child(8)").text());
+          total_peso_bruto += parseFloat($(this).find("td:nth-child(9)").text());
+          total_peso_neto += parseFloat($(this).find("td:nth-child(10)").text());
+      });
 
-      var precioTotal = cantidad.times(precioUnitario);
-      total = total.plus(precioTotal);
-
-      total_peso_bruto = total_peso_bruto.plus(modal_peso_bruto);
-      total_peso_neto = total_peso_neto.plus(modal_peso_neto);
-    });
-
-    $("#total").text(total.toFixed(3).toString());
-    $("#total").val(total.toFixed(3).toString());
-
-    $("#total_peso_bruto").text(total_peso_bruto.toFixed(3).toString());
-    $("#total_peso_neto").text(total_peso_neto.toFixed(3).toString());
-
-    $("#total_peso_bruto").val(total_peso_bruto.toFixed(3).toString());
-    $("#total_peso_neto").val(total_peso_neto.toFixed(3).toString());
+      $("#total").text(total.toFixed(3)).val(total.toFixed(3));
+      $("#total_peso_bruto").text(total_peso_bruto.toFixed(3)).val(total_peso_bruto.toFixed(3));
+      $("#total_peso_neto").text(total_peso_neto.toFixed(3)).val(total_peso_neto.toFixed(3));
   }
 });
 
-/**
- * Variable y funcion para cargar modal con tabla que visualiza las facturas.
- */
 let tablefacturas;
 function modalVerFacturas() {
-  // Mostrar mensaje de carga
   $("#loadingMessage").show();
-  var referencia_nexen = $("#referencia_nexen").val();
+  const referencia_nexen = $("#referencia_nexen").val();
   tablefacturas = $("#tablefacturas").DataTable({
-    aProcessing: true,
-    aServerSide: true,
-    language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json",
-    },
-    ajax: {
-      url:
-        "../include/Facturas/cargarFacturasDetalles.php?referencia_nexen=" +
-        referencia_nexen,
-      dataSrc: "",
-    },
-    columns: [
-      // { "data": "Id_TipoCambio" },
-      { data: "Referencia_Nexen" },
-      { data: "Proveedor" },
-      { data: "Tax_Id" },
-      { data: "Numero_Factura" },
-      { data: "Fecha_Factura" },
-      { data: "Importador_Exportador" },
-      { data: "Total_General" },
-      { data: "Usuario" },
-      { data: "Detalles" },
-      { data: "Invoice" },
-      { data: "Packing_List" },
-      { data: "Editar" },
-      { data: "Eliminar" },
-    ],
-    bDestroy: true,
-    iDisplayLength: 10,
-    order: [[0, "desc"]],
-    searching: true,
-    scrollY: true,
-    fixedHeader: true, // Fijar la cabecera de la tabla
-    scrollX: true,
+      aProcessing: true,
+      aServerSide: true,
+      language: { url: "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+      ajax: { url: `../include/Facturas/cargarFacturasDetalles.php?referencia_nexen=${referencia_nexen}`, dataSrc: "" },
+      columns: [
+          { data: "Referencia_Nexen" },
+          { data: "Proveedor" },
+          { data: "Tax_Id" },
+          { data: "Numero_Factura" },
+          { data: "Fecha_Factura" },
+          { data: "Importador_Exportador" },
+          { data: "Total_General" },
+          { data: "Usuario" },
+          { data: "Detalles" },
+          { data: "Invoice" },
+          { data: "Packing_List" },
+          { data: "Editar" },
+          { data: "Eliminar" }
+      ],
+      bDestroy: true,
+      iDisplayLength: 10,
+      order: [[0, "desc"]],
+      searching: true,
+      scrollY: true,
+      fixedHeader: true,
+      scrollX: true
   });
 
-  // Ocultar mensaje de carga y mostrar tabla cuando la tabla se dibuje
   $("#tablefacturas").on("init.dt draw.dt", function () {
-    $("#loadingMessage").hide();
+      $("#loadingMessage").hide();
   });
 
   $("#modalVerFacturas").modal("show");
 }
+
+
 /**
  * Inicializa los select de la modal carga factura.
  */
