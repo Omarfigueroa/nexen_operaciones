@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $('.selectpicker').selectpicker();
+  $(".selectpicker").selectpicker();
   var facturaCount = 1;
   var cantidadTotal = 0;
   var total_unitario = 0;
@@ -370,6 +370,11 @@ $(document).ready(function () {
 
     // Array para almacenar los registros
     var registros = [];
+    var nombreOperador = $("#modal_nombre_operador").val();
+    var rfcOperador = $("#modal_rfc_operador").val();
+    var domOperador = $("#modal_domicilio_operador").val();
+    var taxId = $("#tax_id").val();
+    var referencia_nexen = $("#referencia_nexen").val();
 
     // Iterar sobre cada fila para obtener la información de cada registro
     filas.each(function () {
@@ -430,177 +435,62 @@ $(document).ready(function () {
       }
     });
     var footer = {
-      total_cantidad: $('#total_cantidad').text().trim(),
-      total_peso_unitario: $('#total_peso_unitario').text().trim(),
-      totalgeneral: $('#totalgeneral').text().trim(),
-      totalpesobruto: $('#totalpesobruto').text().trim(),
-      totalpesoneto: $('#totalpesoneto').text().trim()
-  };
-    registros.push(footer);
-   // Enviar los datos mediante AJAX a un archivo PHP
-   $.ajax({
-        url: '../include/Facturas/guardar_facturas.php', // Ruta del archivo PHP
-        type: 'POST',
-        data: {
-            registros: registros,
-            
-        },
-        success: function(response) {
-            // Mostrar la respuesta del servidor
-            console.log('Respuesta del servidor:', response);
-            alert('Datos guardados exitosamente');
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            // Manejar errores
-            console.error('Error al guardar los datos:', textStatus, errorThrown);
-            alert('Error al guardar los datos');
-        }
-    });
-    var referencia_nexen = $("#referencia_nexen").val();
-    //se muestra spinner loading
-    $("#spinner_insert").removeClass("d-none");
-
-    //bloquear con un disabled el boton de editar para que no lo aprenten
-    $("#btnGuardarFacturas").prop("disabled", true);
-    // Mostrar los registros en la consola o hacer lo que necesites con ellos
-  });
-});
-
-//Guardar partidas de factura
-function enviarSolicitudAjax() {
-  // Comprobar si la tabla tiene registros
-
-  // Obtener los valores de los input
-  var opcion = "insertarOperacionFactura";
-
-  var modal_pais_origen = $("#modal_pais_origen").val();
-
-  var nombreOperador = $("#modal_nombre_operador").val();
-  var rfcOperador = $("#modal_rfc_operador").val();
-  var domOperador = $("#modal_domicilio_operador").val();
-  var numFactura = $("#modal_num_factura").val();
-  var proveedorFact = $("#proveedor_fact").val();
-  var fechaFactura = $("#modal_fecha_factura").val();
-  var taxId = $("#tax_id").val();
-  var total = $("#total").val();
-  var total_peso_bruto = $("#total_peso_bruto").val();
-  var total_peso_neto = $("#total_peso_neto").val();
-
-  //console.log(fechaFactura);
-
-  // Enviar la solicitud AJAX
-  $.ajax({
-    url: "../include/cargarFacturas.php",
-    method: "POST",
-    data: {
-      opcion: opcion,
+      total_cantidad: $("#total_cantidad").text().trim(),
+      total_peso_unitario: $("#total_peso_unitario").text().trim(),
+      totalgeneral: $("#totalgeneral").text().trim(),
+      totalpesobruto: $("#totalpesobruto").text().trim(),
+      totalpesoneto: $("#totalpesoneto").text().trim(),
+    };
+    var operador = {
       referencia_nexen: referencia_nexen,
-      modal_pais_origen,
       nombreOperador: nombreOperador,
       rfcOperador: rfcOperador,
       domOperador: domOperador,
-      proveedorFact: proveedorFact,
-      numFactura: numFactura,
-      fechaFactura: fechaFactura,
       taxId: taxId,
-      total: total,
-      total_peso_bruto: total_peso_bruto,
-      total_peso_neto: total_peso_neto,
-    },
-    dataType: "json",
-    // Datos que deseas enviar al servidor
-    beforeSend: function () {
-      // Muestra el loading
-      $("#loadingModal").modal("show");
-    },
-    success: function (response) {
-      // Manejar la respuesta del servidor
-      if (response.success) {
-        // La inserción principal fue exitosa
-        console.log(response.message);
-        var lastId = response.lastId;
-        var referencia_nexen = response.referencia_nexen;
-        // Realizar el insert por cada registro en la tabla
-        var registros = $("#tablaFacturas tbody tr");
-        var numFactura = $("#modal_num_factura").val();
-        var incoterms = $("#incoterms").val();
-
-        var successShown = false; // Variable de control
-        console.log(registros);
-        registros.each(function (index, element) {
-          var partida = $(element).find("th").text();
-          var descripcion = $(element).find("td:nth-child(2)").text();
-          var descripcion_i = $(element).find("td:nth-child(3)").text();
-          var cantidad = parseFloat($(element).find("td:nth-child(4)").text());
-          var medida = $(element).find("td:nth-child(5)").text();
-          var precioUnitario = parseFloat(
-            $(element).find("td:nth-child(6)").text()
-          );
-          var moneda = $(element).find("td:nth-child(7)").text();
-          var total_partida = parseFloat(
-            $(element).find("td:nth-child(8)").text()
-          );
-          var peso_bruto = $(element).find("td:nth-child(9)").text();
-          var peso_neto = $(element).find("td:nth-child(10)").text();
-          var mark = $(element).find("td:nth-child(11)").text();
-
-          //console.log(peso_bruto+'-'+peso_neto);
-
-          $.ajax({
-            url: "../include/cargarFacturas.php",
-            method: "POST",
-            data: {
-              opcion: "insertarFacturaDetalle",
-              lastId: lastId,
-              referencia_nexen: referencia_nexen,
-              numFactura: numFactura,
-              incoterms: incoterms,
-              partida: partida,
-              descripcion: descripcion,
-              descripcion_i: descripcion_i,
-              cantidad: cantidad,
-              medida: medida,
-              precioUnitario: precioUnitario,
-              moneda: moneda,
-              total_partida: total_partida,
-              peso_bruto: peso_bruto,
-              peso_neto: peso_neto,
-              mark: mark,
-            },
-            dataType: "json",
-            success: function (response) {
-              if (!successShown) {
-                const mensaje = response.message;
-                SweetViewTrue(mensaje, () => {
-                  location.reload();
-                });
-                successShown = true; // Establecer la variable de control en true para evitar mostrar el mensaje nuevamente
-              }
-            },
-            error: function (xhr, status, error) {
-              console.log("Error al realizar el insert para factura " + lastId);
-              console.log(error);
-            },
-          });
+    }; // Crear el objeto final que será enviado al servidor
+    var dataToSend = {
+      registros: registros,
+      footer: footer,
+      operador: operador,
+    };
+    //se muestra spinner loading
+    $("#spinner_insert").removeClass("d-none");
+    //bloquear con un disabled el boton de editar para que no lo aprenten
+    $("#btnGuardarFacturas").prop("disabled", true);
+    $("#closeFacturas").prop("disabled", true);
+    // Enviar los datos mediante AJAX a un archivo PHP
+    $.ajax({
+      url: "../include/Facturas/guardar_facturas.php", // Ruta del archivo PHP
+      type: "POST",
+      data: JSON.stringify(dataToSend),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function (response) {
+        Swal.fire({
+          icon: "success",
+          title: "Exito",
+          text: response.message,
+        }).then(function () {
+          $("#modalCargarFacturas").modal("hide");
+          $("#btnGuardarFacturas").prop("disabled", false);
+          $("#closeFacturas").prop("disabled", false);
+          $("#spinner_insert").addClass("d-none");
         });
-      } else {
-        // La inserción principal falló
-        alert(response.message);
-        location.reload();
-      }
-    },
-    error: function (xhr, status, error) {
-      // Manejar errores de la solicitud AJAX
-      console.error(error);
-      console.error(xhr);
-      console.error(status);
-    },
-    complete: function () {
-      // Oculta el loading después de que la solicitud se complete, ya sea éxito o error
-      $("#loadingModal").modal("hide");
-    },
+
+        return;
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        // Manejar errores
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: response.message,
+        });
+        return;
+      },
+    });
   });
-}
+});
 
 /**
  * Variable y funcion para cargar modal con tabla que visualiza las facturas.
@@ -836,4 +726,40 @@ function modalCargarFactura() {
       },
     });
   }
+}
+
+
+/**modal para ver detalles de factura */
+function DetalleFactura(){
+  Swal.fire({
+    icon: "warning",
+    title: "Oops...",
+    text: "MODULO EN MANTENIMIENTO",
+
+  });
+  return
+}
+
+
+/**modal para editar facturas */
+
+function EditarFactura(){
+  Swal.fire({
+    icon: "warning",
+    title: "Oops...",
+    text: "MODULO EN MANTENIMIENTO",
+
+  });
+  return
+}
+
+/**funcion para eliminar facturas */
+function EliminarFactura(){
+  Swal.fire({
+    icon: "warning",
+    title: "Oops...",
+    text: "MODULO EN MANTENIMIENTO",
+
+  });
+  return
 }

@@ -100,7 +100,7 @@ if ($opcion === 'leerEmpresas') {
             $statement1->bindParam(':total_peso_bruto', $total_peso_bruto);
             $statement1->bindParam(':total_peso_neto', $total_peso_neto);
             
-     
+            
             //$statement1->execute();
 
 
