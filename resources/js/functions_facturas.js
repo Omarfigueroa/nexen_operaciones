@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  $('.selectpicker').selectpicker();
   var facturaCount = 1;
   var cantidadTotal = 0;
   var total_unitario = 0;
@@ -435,10 +436,26 @@ $(document).ready(function () {
       totalpesobruto: $('#totalpesobruto').text().trim(),
       totalpesoneto: $('#totalpesoneto').text().trim()
   };
-
-  // Mostrar los registros en la consola o hacer lo que necesites con ellos
-    console.log('Registros de la tabla:', registros);
-    console.log('Contenido del footer:', footer);
+    registros.push(footer);
+   // Enviar los datos mediante AJAX a un archivo PHP
+   $.ajax({
+        url: '../include/Facturas/guardar_facturas.php', // Ruta del archivo PHP
+        type: 'POST',
+        data: {
+            registros: registros,
+            
+        },
+        success: function(response) {
+            // Mostrar la respuesta del servidor
+            console.log('Respuesta del servidor:', response);
+            alert('Datos guardados exitosamente');
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // Manejar errores
+            console.error('Error al guardar los datos:', textStatus, errorThrown);
+            alert('Error al guardar los datos');
+        }
+    });
     var referencia_nexen = $("#referencia_nexen").val();
     //se muestra spinner loading
     $("#spinner_insert").removeClass("d-none");
