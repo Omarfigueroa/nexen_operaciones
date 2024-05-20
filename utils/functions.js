@@ -868,41 +868,6 @@ function fntView(id_catalogo, referencia_nexen) {
     request.send(strData);
 }
 
-//PRECIO UNITARIO INC DISM
-
-function decreaseDecimals() {
-    var input = $('#precio_unitario');
-    if (input.val() !== '') {
-        var value = input.val();
-        var decimalIndex = value.indexOf('.');
-        if (decimalIndex !== -1) {
-            var decimalPart = value.substring(decimalIndex + 1);
-            if (decimalPart.length > 1) {
-                decimalPart = decimalPart.substring(0, decimalPart.length - 1);
-                value = value.substring(0, decimalIndex + 1) + decimalPart;
-            }
-        }
-        input.val(value);
-        updateDivisionResult();
-    }
-}
-
-function increaseDecimals() {
-    var input = $('#precio_unitario');
-    if (input.val() !== '') {
-        var value = input.val();
-        var decimalIndex = value.indexOf('.');
-        if (decimalIndex !== -1) {
-            var decimalPart = value.substring(decimalIndex + 1);
-            decimalPart += '0';
-            value = value.substring(0, decimalIndex + 1) + decimalPart;
-        } else {
-            value += '.00';
-        }
-        input.val(value);
-        updateDivisionResult();
-    }
-}
 
 function updateDivisionResult() {
     var precioTotal = parseFloat($('#precio_total').val());
