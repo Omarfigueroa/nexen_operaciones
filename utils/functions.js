@@ -14,18 +14,6 @@ var commonOptions = {
   };
 $(document).ready(function () {
    
-  
-
-    $('.selectpicker').selectpicker();
-
-    //botones incrementar y disminuir decimales de precio unitario
-    $('.decrease-btn').click(function () {
-        decreaseDecimals();
-    });
-
-    $('.increase-btn').click(function () {
-        increaseDecimals();
-    });
 
     $('#precio_total, #modal_cantidad').change(function () {
         updateDivisionResult();
@@ -38,11 +26,6 @@ $(document).ready(function () {
         var fechaFormateada = formatearFecha(fechaInput);
         //console.log(fechaFormateada);
     });
-
-    var facturaCount = 1;
-    var total = 0;
-
-
 
     //Para calcular el total dinamicamente en el campo del modal
     // Evento keyup del campo de cantidad
